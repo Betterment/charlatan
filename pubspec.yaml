@@ -1,0 +1,16 @@
+name: fake_http
+description: Fake HTTP Adapter for Dio
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=2.14.0 <3.0.0"
+
+dependencies:
+  collection: ^1.15.0-nullsafety.4
+  dio: ^4.0.0
+  meta: ^1.7.0
+  uri: ^1.0.0
+
+dev_dependencies:
+  test: ^1.16.0
