@@ -28,7 +28,8 @@ void main() {
       expect(result.data, {'name': 'frodo'});
     });
 
-    test('it matches the longest matching url with templated segments', () async {
+    test('it matches the longest matching url with templated segments',
+        () async {
       fakeHttp
         ..whenGet('/users/{id}', (request) => {'name': 'frodo'})
         ..whenGet('/users/{id}/profile', (request) => {'age': 12});
@@ -57,7 +58,8 @@ void main() {
       expect(deleteResult.data, {'name': 'bilbo'});
     });
 
-    test('it overrides existing definitions for the same method and url', () async {
+    test('it overrides existing definitions for the same method and url',
+        () async {
       fakeHttp
         ..whenGet('/users', (request) => {'name': 'frodo'}) //
         ..whenGet('/users', (request) => {'name': 'bilbo'});
@@ -107,7 +109,10 @@ DELETE /users
     test('it supports bytes response bodies', () async {
       fakeHttp.whenGet('/user.png', (request) => Uint8List(1));
 
-      final result = await client.get<Object?>('/user.png', options: Options(responseType: ResponseType.bytes));
+      final result = await client.get<Object?>(
+        '/user.png',
+        options: Options(responseType: ResponseType.bytes),
+      );
       expect(result.data, Uint8List(1));
     });
 
