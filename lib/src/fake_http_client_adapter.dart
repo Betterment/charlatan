@@ -48,6 +48,8 @@ class FakeHttpClientAdapter implements HttpClientAdapter {
 
       if (responseType == ResponseType.json) {
         return ResponseBody.fromString(
+          // Dio currently converts null response bodies to empty string, so
+          // we preserve that behavior here for correctness :shrug:
           responseBody == null ? '' : json.encode(responseBody),
           definition.statusCode,
           headers: {

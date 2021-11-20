@@ -40,23 +40,25 @@ class FakeHttpResponseDefinition {
     final template = UriTemplate(pathOrTemplate);
     final parser = UriParser(template);
 
-    // by reversing the parse we're confirming that we match the right pattern
-    // e.g. /goals/{id} will be a match for /goals/{id}/foo
-    // and we want to use a /goals/{id}/foo pattern if one exists
     final match = parser.matches(uri);
-    if (match) {
-      final vars = parser.parse(uri);
-      final reverseMatch = template.expand(vars) == uri.toString();
-      if (reverseMatch) {
-        return FakeHttpResponseMatch(
-          definition: this,
-          path: path,
-          pathParameters: vars,
-        );
-      }
+    if (!match) {
+      return null;
     }
 
-    return null;
+    // by reversing the parse we're confirming that we match the right pattern
+    // e.g. /goals/{id} will also be a match for /goals/{id}/foo
+    // but we want to use a /goals/{id}/foo pattern if one exists
+    final vars = parser.parse(uri);
+    final reverseMatch = template.expand(vars) == uri.toString();
+    if (!reverseMatch) {
+      return null;
+    }
+
+    return FakeHttpResponseMatch(
+      definition: this,
+      path: path,
+      pathParameters: vars,
+    );
   }
 }
 
