@@ -116,6 +116,18 @@ DELETE /users
       expect(result.data, Uint8List(1));
     });
 
+    test('it provides the path parameters to the response builder', () async {
+      fakeHttp.whenGet(
+        '/users/{id}/{other}',
+        (request) => {'pathParameters': request.pathParameters},
+      );
+
+      final result = await client.get<Object?>('/users/12/something');
+      expect(result.data, {
+        'pathParameters': {'id': '12', 'other': 'something'}
+      });
+    });
+
     group('whenGet', () {
       test('it returns a 200 status by default', () async {
         fakeHttp.whenGet('/user', (request) => null);

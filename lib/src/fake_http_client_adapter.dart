@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:fake_http/src/fake_http.dart';
+import 'package:fake_http/src/fake_http_response_definition.dart';
 
 /// {@template fake_http_client_adapter}
 /// An implementation of dio's [HttpClientAdapter] that returns fake HTTP
@@ -32,14 +32,17 @@ class FakeHttpClientAdapter implements HttpClientAdapter {
     final path = options.path;
     final method = options.method.toLowerCase();
     final possibleDefinitions = fakeHttp.getDefinitionsForHttpMethod(method);
+    final match = _findMatchForPath(possibleDefinitions, path);
 
-    final definition = possibleDefinitions.firstWhereOrNull(
-      (possibleDefinition) => possibleDefinition.matches(path),
-    );
-
-    if (definition != null) {
-      final responseBody = definition.responseBodyBuilder(options);
+    if (match != null) {
+      final definition = match.definition;
+      final request = FakeHttpRequest(
+        pathParameters: match.pathParameters,
+        requestOptions: options,
+      );
+      final responseBody = definition.responseBodyBuilder(request);
       final responseType = options.responseType;
+
       if (responseType == ResponseType.json) {
         return ResponseBody.fromString(
           responseBody == null ? '' : json.encode(responseBody),
@@ -81,4 +84,18 @@ ${fakeHttp.toPrettyPrintedString()}
   /// {@nodoc}
   @override
   void close({bool force = false}) {}
+
+  FakeHttpResponseMatch? _findMatchForPath(
+    List<FakeHttpResponseDefinition> possibleDefinitions,
+    String path,
+  ) {
+    for (final possibleDefinition in possibleDefinitions) {
+      final match = possibleDefinition.computeMatch(path);
+      if (match != null) {
+        return match;
+      }
+    }
+
+    return null;
+  }
 }

@@ -5,7 +5,7 @@ import 'package:uri/uri.dart';
 ///
 /// The response body may be any valid object or null. Typically you will want to
 /// return a json response of Map<String, Object?>.
-typedef ResponseBodyBuilder = Object? Function(RequestOptions request);
+typedef ResponseBodyBuilder = Object? Function(FakeHttpRequest request);
 
 /// {@template fake_http_response_defintion}
 /// The definition of a fake HTTP response and the pattern of requests it
@@ -33,9 +33,9 @@ class FakeHttpResponseDefinition {
     required this.responseBodyBuilder,
   });
 
-  /// Returns true if this [FakeHttpResponseDefinition] is a match for the
-  /// provided path
-  bool matches(String path) {
+  /// Returns a [FakeHttpResponseMatch] if this [FakeHttpResponseDefinition] is
+  /// a match for the provided path
+  FakeHttpResponseMatch? computeMatch(String path) {
     final uri = Uri.parse(path);
     final template = UriTemplate(pathOrTemplate);
     final parser = UriParser(template);
@@ -47,9 +47,57 @@ class FakeHttpResponseDefinition {
     if (match) {
       final vars = parser.parse(uri);
       final reverseMatch = template.expand(vars) == uri.toString();
-      return reverseMatch;
+      if (reverseMatch) {
+        return FakeHttpResponseMatch(
+          definition: this,
+          path: path,
+          pathParameters: vars,
+        );
+      }
     }
 
-    return false;
+    return null;
   }
+}
+
+/// {@template fake_http_response_match}
+/// A type representing a match of a path string to a [FakeHttpResponseDefinition].
+///
+/// This match contains any parameters extracted from the path's URI template.
+/// {@endtemplate}
+class FakeHttpResponseMatch {
+  /// The path of the request
+  final String path;
+
+  /// The definition that matched the [path]
+  final FakeHttpResponseDefinition definition;
+
+  /// The matching parameters extracted from the [path]
+  final Map<String, String> pathParameters;
+
+  /// {@macro fake_http_response_match}
+  FakeHttpResponseMatch({
+    required this.path,
+    required this.definition,
+    required this.pathParameters,
+  });
+}
+
+/// {@template fake_http_request}
+/// A type representing a match of a path string to a [FakeHttpResponseDefinition].
+///
+/// This match contains any parameters extracted from the path's URI template.
+/// {@endtemplate}
+class FakeHttpRequest {
+  /// The matching parameters extracted from the path of this request
+  final Map<String, String> pathParameters;
+
+  /// The request headers, body, and options
+  final RequestOptions requestOptions;
+
+  /// {@macro fake_http_request}
+  FakeHttpRequest({
+    required this.pathParameters,
+    required this.requestOptions,
+  });
 }

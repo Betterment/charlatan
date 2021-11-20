@@ -12,11 +12,11 @@ mocks.
 
 It consists of two components:
 
-* `FakeHttp` - a class for configuring and providing fake HTTP responses
-    based on HTTP method and URI template.
-* `FakeHttpClientAdapter` - an implementation of Dio's
-    `HttpClientAdapter` that returns responses from a configured
-    `FakeHttp` instance
+- `FakeHttp` - a class for configuring and providing fake HTTP responses
+  based on HTTP method and URI template.
+- `FakeHttpClientAdapter` - an implementation of Dio's
+  `HttpClientAdapter` that returns responses from a configured
+  `FakeHttp` instance
 
 ## Usage
 
@@ -40,7 +40,8 @@ response.
 ```dart
 final fakeHttp = FakeHttp();
 fakeHttp.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
-fakeHttp.whenGet('/users/{id}', (req) => { 'id': req.urlParams['id'], 'name': 'bilbo' });
+fakeHttp.whenGet('/users/{id}', (req) => { 'id': req.pathParameters['id'], 'name': 'bilbo' });
+fakeHttp.whenGet('/users/{id}/profile', (_) => null, statusCode: 204);
 ```
 
 ### Building a fake HTTP client
