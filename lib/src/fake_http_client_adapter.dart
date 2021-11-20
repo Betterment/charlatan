@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:fake_http/src/fake_http.dart';
 import 'package:fake_http/src/fake_http_response_definition.dart';
@@ -32,7 +33,9 @@ class FakeHttpClientAdapter implements HttpClientAdapter {
     final path = options.path;
     final method = options.method.toLowerCase();
     final possibleDefinitions = fakeHttp.getDefinitionsForHttpMethod(method);
-    final match = _findMatchForPath(possibleDefinitions, path);
+    final match = possibleDefinitions
+        .map((d) => d.computeMatch(path))
+        .firstWhereOrNull((m) => m != null);
 
     if (match != null) {
       final definition = match.definition;
@@ -84,18 +87,4 @@ ${fakeHttp.toPrettyPrintedString()}
   /// {@nodoc}
   @override
   void close({bool force = false}) {}
-
-  FakeHttpResponseMatch? _findMatchForPath(
-    List<FakeHttpResponseDefinition> possibleDefinitions,
-    String path,
-  ) {
-    for (final possibleDefinition in possibleDefinitions) {
-      final match = possibleDefinition.computeMatch(path);
-      if (match != null) {
-        return match;
-      }
-    }
-
-    return null;
-  }
 }
