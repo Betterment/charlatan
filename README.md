@@ -69,10 +69,24 @@ expect(result.data, {'id', 1, 'name': 'bilbo'});
 > What happens if I make a request that doesn't match a configured fake
 > response?
 
-TODO
+You get a helpful error message like this:
+
+```
+Unable to find matching fake http response definition for:
+
+GET /blahhhh
+
+Did you configure it?
+
+The fake http response definitions configured were:
+GET /users
+POST /users
+PUT /users
+DELETE /users
+```
 
 > How can I configure a fake response that relies upon the result of
 > another fake request? e.g. a POST followed by a GET that can "read its
 > own writes"
 
-TODO
+Check out the example directory.
