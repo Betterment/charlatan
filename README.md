@@ -41,7 +41,8 @@ response.
 final fakeHttp = FakeHttp();
 fakeHttp.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
 fakeHttp.whenGet('/users/{id}', (req) => { 'id': req.pathParameters['id'], 'name': 'bilbo' });
-fakeHttp.whenGet('/users/{id}/profile', (_) => null, statusCode: 204);
+fakeHttp.whenPut('/users/{id}/profile', (_) => null, statusCode: 204);
+fakeHttp.whenDelete('/users/{id}', (_) => null, statusCode: 204);
 ```
 
 ### Building a fake HTTP client
