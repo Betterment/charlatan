@@ -15,7 +15,7 @@ It consists of two components:
 - `Charlatan` - a class for configuring and providing fake HTTP responses
   based on HTTP method and URI template.
 - `CharlatanHttpClientAdapter` - an implementation of Dio's
-  `CharlatanClientAdapter` that returns responses from a configured
+  `HttpClientAdapter` that returns responses from a configured
   `Charlatan` instance
 
 ## Usage
