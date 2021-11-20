@@ -98,7 +98,8 @@ class FakeHttp {
       // existing exact match, but it feels weird to have a data structure that
       // contains responses with duplicate pathOrTemplate knowing that only one
       // of them can ever be matched.
-      ..removeWhere((possibleDefinition) => possibleDefinition.pathOrTemplate == pathOrTemplate)
+      ..removeWhere((possibleDefinition) =>
+          possibleDefinition.pathOrTemplate == pathOrTemplate)
       // this is the important part. we want to always insert new entries at the
       // beginning of the list because that matches the expecations of the user
       // in terms of how overriding a fake response would work.
@@ -122,7 +123,8 @@ class FakeHttp {
     return _mapping.entries
         .expand<String>(
           (entry) => entry.value.map(
-            (definition) => '${definition.httpMethod.toUpperCase()} ${definition.pathOrTemplate}',
+            (definition) =>
+                '${definition.httpMethod.toUpperCase()} ${definition.pathOrTemplate}',
           ),
         )
         .join('\n');

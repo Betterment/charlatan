@@ -15,6 +15,7 @@ import 'package:fake_http/src/fake_http.dart';
 /// ```
 /// {@endtemplate}
 class FakeHttpClientAdapter implements HttpClientAdapter {
+  /// Fake HTTP definitions for this adapter
   final FakeHttp fakeHttp;
 
   /// {@macro fake_http_client_adapter}

@@ -1,0 +1,18 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    - package_api_docs
+    - public_member_api_docs
+    - sort_pub_dependencies
+
+analyzer:
+  exclude:
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    missing_return: error
+    missing_required_param: error

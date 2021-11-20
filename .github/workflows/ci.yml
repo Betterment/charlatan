@@ -1,0 +1,40 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.5
+      - uses: dart-lang/setup-dart@v1.3
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: dart analyze
+
+      - name: Run tests and generate coverage report
+        run: ./scripts/generate_code_coverage.sh
+
+      - name: Report code coverage
+        uses: zgosalvez/github-actions-report-lcov@v1.4.0
+        with:
+          coverage-files: coverage/lcov.info
+          minimum-coverage: 90
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          artifact-name: code-coverage-report
