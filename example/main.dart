@@ -13,14 +13,15 @@ void main() {
     client = Dio()..httpClientAdapter = charlatan.toFakeHttpClientAdapter();
   });
 
-  test('example', () async {
-    // Create a plain fake response
+  test('Create a plain fake response', () async {
     charlatan.whenGet('/user', (_) => {'name': 'frodo'});
 
     final plain = await client.get<Object?>('/user');
     expect(plain.data, {'name': 'frodo'});
+  });
 
-    // Use a URI template and use the path parameters in the response
+  test('Use a URI template and use the path parameters in the response',
+      () async {
     charlatan.whenGet(
       '/user/{id}',
       (request) => {
@@ -31,8 +32,9 @@ void main() {
 
     final withPathParams = await client.get<Object?>('/user/12');
     expect(withPathParams.data, {'id': '12', 'name': 'frodo'});
+  });
 
-    // Use a URI template and use the path parameters in the response
+  test('Use a custom status code and an emtpy body', () async {
     charlatan.whenGet(
       '/posts',
       (_) => null,
@@ -42,8 +44,9 @@ void main() {
     final emptyBody = await client.get<Object?>('/posts');
     expect(emptyBody.data, '');
     expect(emptyBody.statusCode, 204);
+  });
 
-    // Handle a POST and then a GET with shared state
+  test('Handle a POST and then a GET with shared state', () async {
     final posts = <Object>[];
     charlatan
       ..whenPost(
