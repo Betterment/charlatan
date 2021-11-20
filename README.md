@@ -20,7 +20,7 @@ It consists of two components:
 
 ## Usage
 
-Add `fake_http` to your pubspec.yaml's `dev_dependencies`.
+Add `fake_http` to your pubspec.yaml's `dev_dependencies`:
 
 ```yaml
 # pubspec.yaml
@@ -30,11 +30,37 @@ dev_dependencies:
 
 ### Configuring fake responses
 
-TODO
+Create an instance of `FakeHttp` and call the corresponding
+configuration method for the HTTP method you want to map a request to.
+
+You can configure fakes responses using a specific path or a URI
+template. You can also use the request object to customize your
+response.
+
+```dart
+final fakeHttp = FakeHttp();
+fakeHttp.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
+fakeHttp.whenGet('/users/{id}', (req) => { 'id': req.urlParams['id'], 'name': 'bilbo' });
+```
 
 ### Building a fake HTTP client
 
-TODO
+Build the `FakeHttpClientAdapter` from the `FakeHttp` instance and then
+assign it to your `Dio` instance's `httpClientAdapter`.
+
+```dart
+final fakeHttp = FakeHttp();
+// ... configure fake responses ...
+final dio = Dio()..httpClientAdapter = fakeHttp.toFakeHttpClientAdapter();
+```
+
+Now make HTTP requests like your normally would and they will be routed
+through your configured fakes.
+
+```dart
+final result = await dio.get<Object?>('/users/1');
+expect(result.data, {'id', 1, 'name': 'bilbo'});
+```
 
 ### FAQ
 
