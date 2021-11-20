@@ -1,4 +1,4 @@
-name: fake_http
+name: charlatan
 description: Fake HTTP Adapter for Dio
 version: 0.0.1
 publish_to: none

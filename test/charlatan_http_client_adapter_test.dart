@@ -1,28 +1,28 @@
 import 'dart:typed_data';
 
+import 'package:charlatan/charlatan.dart';
 import 'package:dio/dio.dart';
-import 'package:fake_http/fake_http.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('FakeHttpClientAdapter', () {
+  group('CharlatanHttpClientAdapter', () {
     late Dio client;
-    late FakeHttp fakeHttp;
+    late Charlatan charlatan;
 
     setUp(() {
-      fakeHttp = FakeHttp()..silenceErrors();
-      client = Dio()..httpClientAdapter = fakeHttp.toFakeHttpClientAdapter();
+      charlatan = Charlatan()..silenceErrors();
+      client = Dio()..httpClientAdapter = charlatan.toFakeHttpClientAdapter();
     });
 
     test('it matches a url without templated segments', () async {
-      fakeHttp.whenGet('/user', (request) => {'name': 'frodo'});
+      charlatan.whenGet('/user', (request) => {'name': 'frodo'});
 
       final result = await client.get<Object?>('/user');
       expect(result.data, {'name': 'frodo'});
     });
 
     test('it matches a url with templated segments', () async {
-      fakeHttp.whenGet('/users/{id}', (request) => {'name': 'frodo'});
+      charlatan.whenGet('/users/{id}', (request) => {'name': 'frodo'});
 
       final result = await client.get<Object?>('/users/12');
       expect(result.data, {'name': 'frodo'});
@@ -30,7 +30,7 @@ void main() {
 
     test('it matches the longest matching url with templated segments',
         () async {
-      fakeHttp
+      charlatan
         ..whenGet('/users/{id}', (request) => {'name': 'frodo'})
         ..whenGet('/users/{id}/profile', (request) => {'age': 12});
 
@@ -39,7 +39,7 @@ void main() {
     });
 
     test('it disambiguates matches by http method', () async {
-      fakeHttp
+      charlatan
         ..whenGet('/users', (request) => {'name': 'frodo'})
         ..whenPost('/users', (request) => {'name': 'sam'})
         ..whenPut('/users', (request) => {'name': 'gandalf'})
@@ -60,7 +60,7 @@ void main() {
 
     test('it overrides existing definitions for the same method and url',
         () async {
-      fakeHttp
+      charlatan
         ..whenGet('/users', (request) => {'name': 'frodo'}) //
         ..whenGet('/users', (request) => {'name': 'bilbo'});
 
@@ -69,7 +69,7 @@ void main() {
     });
 
     test('it returns a helpful error message when no match is found', () async {
-      fakeHttp
+      charlatan
         ..whenGet('/users', (request) => {'name': 'frodo'})
         ..whenPost('/users', (request) => {'name': 'sam'})
         ..whenPut('/users', (request) => {'name': 'gandalf'})
@@ -100,14 +100,14 @@ DELETE /users
     });
 
     test('it supports query strings', () async {
-      fakeHttp.whenGet('/users{?foo}', (request) => {'name': 'frodo'});
+      charlatan.whenGet('/users{?foo}', (request) => {'name': 'frodo'});
 
       final result = await client.get<Object?>('/users?foo=bar');
       expect(result.data, {'name': 'frodo'});
     });
 
     test('it supports bytes response bodies', () async {
-      fakeHttp.whenGet('/user.png', (request) => Uint8List(1));
+      charlatan.whenGet('/user.png', (request) => Uint8List(1));
 
       final result = await client.get<Object?>(
         '/user.png',
@@ -117,7 +117,7 @@ DELETE /users
     });
 
     test('it provides the path parameters to the response builder', () async {
-      fakeHttp.whenGet(
+      charlatan.whenGet(
         '/users/{id}/{other}',
         (request) => {'pathParameters': request.pathParameters},
       );
@@ -130,14 +130,14 @@ DELETE /users
 
     group('whenGet', () {
       test('it returns a 200 status by default', () async {
-        fakeHttp.whenGet('/user', (request) => null);
+        charlatan.whenGet('/user', (request) => null);
 
         final result = await client.get<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        fakeHttp.whenGet('/user', (request) => null, statusCode: 404);
+        charlatan.whenGet('/user', (request) => null, statusCode: 404);
 
         expect(
           client.get<Object?>('/user'),
@@ -154,14 +154,14 @@ DELETE /users
 
     group('whenPost', () {
       test('it returns a 200 status by default', () async {
-        fakeHttp.whenPost('/user', (request) => null);
+        charlatan.whenPost('/user', (request) => null);
 
         final result = await client.post<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        fakeHttp.whenPost('/user', (request) => null, statusCode: 404);
+        charlatan.whenPost('/user', (request) => null, statusCode: 404);
 
         expect(
           client.post<Object?>('/user'),
@@ -178,14 +178,14 @@ DELETE /users
 
     group('whenPut', () {
       test('it returns a 200 status by default', () async {
-        fakeHttp.whenPut('/user', (request) => null);
+        charlatan.whenPut('/user', (request) => null);
 
         final result = await client.put<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        fakeHttp.whenPut('/user', (request) => null, statusCode: 404);
+        charlatan.whenPut('/user', (request) => null, statusCode: 404);
 
         expect(
           client.put<Object?>('/user'),
@@ -202,14 +202,14 @@ DELETE /users
 
     group('whenDelete', () {
       test('it returns a 200 status by default', () async {
-        fakeHttp.whenDelete('/user', (request) => null);
+        charlatan.whenDelete('/user', (request) => null);
 
         final result = await client.delete<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        fakeHttp.whenDelete('/user', (request) => null, statusCode: 404);
+        charlatan.whenDelete('/user', (request) => null, statusCode: 404);
 
         expect(
           client.delete<Object?>('/user'),

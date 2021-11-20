@@ -1,6 +1,6 @@
-# fake_http
+# charlatan
 
-[![pub package](https://img.shields.io/pub/v/fake_http.svg)](https://pub.dev/packages/fake_http)
+[![pub package](https://img.shields.io/pub/v/charlatan.svg)](https://pub.dev/packages/charlatan)
 [![Build status](https://github.com/Betterment/dart_fake_http/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Betterment/dart_fake_http/actions/workflows/ci.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Betterment/dart_fake_http/pulse)
@@ -12,25 +12,25 @@ mocks.
 
 It consists of two components:
 
-- `FakeHttp` - a class for configuring and providing fake HTTP responses
+- `Charlatan` - a class for configuring and providing fake HTTP responses
   based on HTTP method and URI template.
-- `FakeHttpClientAdapter` - an implementation of Dio's
-  `HttpClientAdapter` that returns responses from a configured
-  `FakeHttp` instance
+- `CharlatanHttpClientAdapter` - an implementation of Dio's
+  `CharlatanClientAdapter` that returns responses from a configured
+  `Charlatan` instance
 
 ## Usage
 
-Add `fake_http` to your pubspec.yaml's `dev_dependencies`:
+Add `charlatan` to your pubspec.yaml's `dev_dependencies`:
 
 ```yaml
 # pubspec.yaml
 dev_dependencies:
-  fake_http:
+  charlatan:
 ```
 
 ### Configuring fake responses
 
-Create an instance of `FakeHttp` and call the corresponding
+Create an instance of `Charlatan` and call the corresponding
 configuration method for the HTTP method you want to map a request to.
 
 You can configure fakes responses using a specific path or a URI
@@ -38,22 +38,22 @@ template. You can also use the request object to customize your
 response.
 
 ```dart
-final fakeHttp = FakeHttp();
-fakeHttp.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
-fakeHttp.whenGet('/users/{id}', (req) => { 'id': req.pathParameters['id'], 'name': 'bilbo' });
-fakeHttp.whenPut('/users/{id}/profile', (_) => null, statusCode: 204);
-fakeHttp.whenDelete('/users/{id}', (_) => null, statusCode: 204);
+final charlatan = Charlatan();
+charlatan.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
+charlatan.whenGet('/users/{id}', (req) => { 'id': req.pathParameters['id'], 'name': 'bilbo' });
+charlatan.whenPut('/users/{id}/profile', (_) => null, statusCode: 204);
+charlatan.whenDelete('/users/{id}', (_) => null, statusCode: 204);
 ```
 
 ### Building a fake HTTP client
 
-Build the `FakeHttpClientAdapter` from the `FakeHttp` instance and then
+Build the `CharlatanHttpClientAdapter` from the `Charlatan` instance and then
 assign it to your `Dio` instance's `httpClientAdapter`.
 
 ```dart
-final fakeHttp = FakeHttp();
+final charlatan = Charlatan();
 // ... configure fake responses ...
-final dio = Dio()..httpClientAdapter = fakeHttp.toFakeHttpClientAdapter();
+final dio = Dio()..httpClientAdapter = charlatan.toFakeHttpClientAdapter();
 ```
 
 Now make HTTP requests like your normally would and they will be routed
