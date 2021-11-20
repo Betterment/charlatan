@@ -6,9 +6,9 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Betterment/dart_fake_http/pulse)
 
 This package provides the ability to configure and return fake HTTP
-responses from your Dio HTTP Client. This makes it easy to test the
-behavior of code that interacts with HTTP services without having to use
-mocks.
+responses from your [Dio HTTP Client](https://pub.dev/packages/dio).
+This makes it easy to test the behavior of code that interacts with
+HTTP services without having to use mocks.
 
 It consists of two components:
 
