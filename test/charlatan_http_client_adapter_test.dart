@@ -128,6 +128,16 @@ DELETE /users
       });
     });
 
+    test('it supports async response body builders', () async {
+      charlatan.whenGet(
+        '/user',
+        (_) async => Future.delayed(Duration.zero, () => {'name': 'frodo'}),
+      );
+
+      final result = await client.get<Object?>('/user');
+      expect(result.data, {'name': 'frodo'});
+    });
+
     group('whenGet', () {
       test('it returns a 200 status by default', () async {
         charlatan.whenGet('/user', (request) => null);

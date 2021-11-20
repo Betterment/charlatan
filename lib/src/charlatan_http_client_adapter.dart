@@ -43,7 +43,7 @@ class CharlatanHttpClientAdapter implements HttpClientAdapter {
         pathParameters: match.pathParameters,
         requestOptions: options,
       );
-      final responseBody = definition.responseBodyBuilder(request);
+      final responseBody = await definition.responseBodyBuilder(request);
       final responseType = options.responseType;
 
       if (responseType == ResponseType.json) {

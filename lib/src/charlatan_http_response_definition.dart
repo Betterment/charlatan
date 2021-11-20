@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:uri/uri.dart';
 
@@ -5,7 +7,7 @@ import 'package:uri/uri.dart';
 ///
 /// The response body may be any valid object or null. Typically you will want to
 /// return a json response of Map<String, Object?>.
-typedef CharlatanResponseBodyBuilder = Object? Function(
+typedef CharlatanResponseBodyBuilder = FutureOr<Object?> Function(
   CharlatanHttpRequest request,
 );
 
