@@ -16,7 +16,7 @@ It consists of two components:
   based on HTTP method and URI template.
 - `CharlatanHttpClientAdapter` - an implementation of Dio's
   `HttpClientAdapter` that returns responses from a configured
-  `Charlatan` instance
+  `Charlatan` instance.
 
 ## Usage
 
