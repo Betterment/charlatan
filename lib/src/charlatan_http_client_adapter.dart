@@ -1,27 +1,28 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:charlatan/src/charlatan.dart';
+import 'package:charlatan/src/charlatan_http_response_definition.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:fake_http/src/fake_http.dart';
 
-/// {@template fake_http_client_adapter}
+/// {@template charlatan_http_client_adapter}
 /// An implementation of dio's [HttpClientAdapter] that returns fake HTTP
-/// responses based on the configuration of a [FakeHttp] instance.
+/// responses based on the configuration of a [Charlatan] instance.
 ///
 /// ```dart
-/// final fakeHttp = FakeHttp();
-/// Dio()..httpClientAdapter = FakeHttpClientAdapter(fakeHttp);
+/// final charlatan = Charlatan();
+/// Dio()..httpClientAdapter = CharlatanHttpClientAdapter(charlatan);
 /// ```
 /// {@endtemplate}
-class FakeHttpClientAdapter implements HttpClientAdapter {
+class CharlatanHttpClientAdapter implements HttpClientAdapter {
   /// Fake HTTP definitions for this adapter
-  final FakeHttp fakeHttp;
+  final Charlatan charlatan;
 
-  /// {@macro fake_http_client_adapter}
-  const FakeHttpClientAdapter(this.fakeHttp);
+  /// {@macro charlatan_http_client_adapter}
+  const CharlatanHttpClientAdapter(this.charlatan);
 
-  /// Returns a [ResponseBody] matching the request if one exists in [fakeHttp].
+  /// Returns a [ResponseBody] matching the request if one exists in [charlatan].
   /// If no response matches, throws [UnimplementedError].
   @override
   Future<ResponseBody> fetch(
@@ -31,17 +32,24 @@ class FakeHttpClientAdapter implements HttpClientAdapter {
   ) async {
     final path = options.path;
     final method = options.method.toLowerCase();
-    final possibleDefinitions = fakeHttp.getDefinitionsForHttpMethod(method);
+    final possibleDefinitions = charlatan.getDefinitionsForHttpMethod(method);
+    final match = possibleDefinitions
+        .map((d) => d.computeMatch(path))
+        .firstWhereOrNull((m) => m != null);
 
-    final definition = possibleDefinitions.firstWhereOrNull(
-      (possibleDefinition) => possibleDefinition.matches(path),
-    );
-
-    if (definition != null) {
-      final responseBody = definition.responseBodyBuilder(options);
+    if (match != null) {
+      final definition = match.definition;
+      final request = CharlatanHttpRequest(
+        pathParameters: match.pathParameters,
+        requestOptions: options,
+      );
+      final responseBody = await definition.responseBodyBuilder(request);
       final responseType = options.responseType;
+
       if (responseType == ResponseType.json) {
         return ResponseBody.fromString(
+          // Dio currently converts null response bodies to empty string, so
+          // we preserve that behavior here for correctness :shrug:
           responseBody == null ? '' : json.encode(responseBody),
           definition.statusCode,
           headers: {
@@ -67,10 +75,10 @@ ${method.toUpperCase()} $path
 Did you configure it?
 
 The fake http response definitions configured were:
-${fakeHttp.toPrettyPrintedString()}
+${charlatan.toPrettyPrintedString()}
 
 ''';
-    if (fakeHttp.shouldLogErrors) {
+    if (charlatan.shouldLogErrors) {
       // ignore: avoid_print
       print(errorMessage);
     }

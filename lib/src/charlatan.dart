@@ -1,17 +1,17 @@
-import 'package:fake_http/src/fake_http_response_definition.dart';
+import 'package:charlatan/src/charlatan_http_response_definition.dart';
 
-/// {@template fake_http}
+/// {@template charlatan}
 /// A class for building a collection of fake http responses to power a fake
 /// http client.
 ///
 /// ```dart
-/// final fakeHttp = FakeHttp()
+/// final charlatan = Charlatan()
 ///   ..whenGet('/hero', (_) => <String, Object?>{'name': 'Bilbo'})
 ///   ..whenGet('/sidekick', (_) => <String, Object?>{'name': 'Samwise'});
 /// ```
 /// {@endtemplate}
-class FakeHttp {
-  final Map<String, List<FakeHttpResponseDefinition>> _mapping = {};
+class Charlatan {
+  final Map<String, List<CharlatanHttpResponseDefinition>> _mapping = {};
 
   /// {@nodoc}
   bool shouldLogErrors = true;
@@ -23,7 +23,7 @@ class FakeHttp {
   /// [pathOrTemplate] with the corresponding [statusCode].
   void whenGet(
     String pathOrTemplate,
-    ResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBodyBuilder responseBodyBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
@@ -38,7 +38,7 @@ class FakeHttp {
   /// [pathOrTemplate] with the corresponding [statusCode].
   void whenPost(
     String pathOrTemplate,
-    ResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBodyBuilder responseBodyBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
@@ -53,7 +53,7 @@ class FakeHttp {
   /// [pathOrTemplate] with the corresponding [statusCode].
   void whenPut(
     String pathOrTemplate,
-    ResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBodyBuilder responseBodyBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
@@ -68,7 +68,7 @@ class FakeHttp {
   /// [pathOrTemplate] with the corresponding [statusCode].
   void whenDelete(
     String pathOrTemplate,
-    ResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBodyBuilder responseBodyBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
@@ -83,9 +83,9 @@ class FakeHttp {
     required String httpMethod,
     required String pathOrTemplate,
     required int statusCode,
-    required ResponseBodyBuilder responseBodyBuilder,
+    required CharlatanResponseBodyBuilder responseBodyBuilder,
   }) {
-    final definition = FakeHttpResponseDefinition(
+    final definition = CharlatanHttpResponseDefinition(
       statusCode: statusCode,
       httpMethod: httpMethod,
       pathOrTemplate: pathOrTemplate,
@@ -106,9 +106,9 @@ class FakeHttp {
       ..insert(0, definition);
   }
 
-  /// Returns all the matching [FakeHttpResponseDefinition]s for the provided
+  /// Returns all the matching [CharlatanHttpResponseDefinition]s for the provided
   /// [httpMethod] or an empty list.
-  List<FakeHttpResponseDefinition> getDefinitionsForHttpMethod(
+  List<CharlatanHttpResponseDefinition> getDefinitionsForHttpMethod(
     String httpMethod,
   ) {
     return _mapping.putIfAbsent(httpMethod, () => []);
