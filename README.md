@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/charlatan.svg)](https://pub.dev/packages/charlatan)
 [![Build status](https://github.com/Betterment/dart_fake_http/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Betterment/charlatan/actions/workflows/ci.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Betterment/dart_fake_http/pulse)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Betterment/charlatan/pulse)
 
 This package provides the ability to configure and return fake HTTP
 responses from your [Dio HTTP Client](https://pub.dev/packages/dio).
