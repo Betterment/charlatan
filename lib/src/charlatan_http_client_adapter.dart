@@ -43,27 +43,7 @@ class CharlatanHttpClientAdapter implements HttpClientAdapter {
         pathParameters: match.pathParameters,
         requestOptions: options,
       );
-      final responseBody = await definition.responseBodyBuilder(request);
-      final responseType = options.responseType;
-
-      if (responseType == ResponseType.json) {
-        return ResponseBody.fromString(
-          // Dio currently converts null response bodies to empty string, so
-          // we preserve that behavior here for correctness :shrug:
-          responseBody == null ? '' : json.encode(responseBody),
-          definition.statusCode,
-          headers: {
-            'content-type': ['application/json'],
-          },
-        );
-      } else if (responseType == ResponseType.bytes) {
-        return ResponseBody.fromBytes(
-          responseBody! as Uint8List,
-          definition.statusCode,
-        );
-      } else {
-        throw UnimplementedError('Unsupported response type: $responseType');
-      }
+      return _buildResponse(definition, request);
     }
 
     final errorMessage = '''
@@ -89,4 +69,37 @@ ${charlatan.toPrettyPrintedString()}
   /// {@nodoc}
   @override
   void close({bool force = false}) {}
+}
+
+Future<ResponseBody> _buildResponse(
+  CharlatanHttpResponseDefinition definition,
+  CharlatanHttpRequest request,
+) async {
+  final response = await definition.buildResponse(request);
+  final responseType = request.requestOptions.responseType;
+
+  if (responseType == ResponseType.json) {
+    return ResponseBody.fromString(
+      // Dio currently converts null response bodies to empty string, so
+      // we preserve that behavior here for correctness :shrug:
+      response.body == null ? '' : json.encode(response.body),
+      response.statusCode,
+      headers: {
+        'content-type': ['application/json'],
+        for (final header in response.headers.entries)
+          header.key: [header.value],
+      },
+    );
+  } else if (responseType == ResponseType.bytes) {
+    return ResponseBody.fromBytes(
+      response.body as Uint8List,
+      definition.statusCode,
+      headers: {
+        for (final header in response.headers.entries)
+          header.key: [header.value],
+      },
+    );
+  } else {
+    throw UnimplementedError('Unsupported response type: $responseType');
+  }
 }

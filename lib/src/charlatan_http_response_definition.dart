@@ -3,11 +3,19 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:uri/uri.dart';
 
-/// A type representing a function to convert an http request into a response body.
+/// {@template charlatan_http_response_builder}
+/// A type representing a function to convert an http request into a response.
 ///
-/// The response body may be any valid object or null. Typically you will want to
-/// return a json response of Map<String, Object?>.
-typedef CharlatanResponseBodyBuilder = FutureOr<Object?> Function(
+/// The return value may be any json encodable object, a [CharlatanHttpResponse],
+/// or null.
+///
+/// Typically you will want to return a json response of Map<String, Object?>
+/// which will be automatically serialized and returned with a 200 status code.
+///
+/// If you want to customize the headers or the status code of the response, you
+/// can return an instance of [CharlatanHttpResponse].
+/// {@endtemplate}
+typedef CharlatanResponseBuilder = FutureOr<Object?> Function(
   CharlatanHttpRequest request,
 );
 
@@ -26,15 +34,15 @@ class CharlatanHttpResponseDefinition {
   /// e.g. '/users' or '/users/{id}'
   final String pathOrTemplate;
 
-  /// The callback that produces the response body for this fake response.
-  final CharlatanResponseBodyBuilder responseBodyBuilder;
+  /// The callback that produces the response.
+  final CharlatanResponseBuilder responseBuilder;
 
   /// {@macro charlatan_http_response_definition}
   CharlatanHttpResponseDefinition({
     required this.statusCode,
     required this.httpMethod,
     required this.pathOrTemplate,
-    required this.responseBodyBuilder,
+    required this.responseBuilder,
   });
 
   /// Returns a [CharlatanHttpResponseMatch] if this [CharlatanHttpResponseDefinition] is
@@ -64,6 +72,23 @@ class CharlatanHttpResponseDefinition {
       pathParameters: vars,
     );
   }
+
+  /// Builds a [CharlatanHttpResponse] from the [responseBuilder] given the
+  /// [request].
+  Future<CharlatanHttpResponse> buildResponse(
+    CharlatanHttpRequest request,
+  ) async {
+    final result = await responseBuilder(request);
+
+    if (result is CharlatanHttpResponse) {
+      return result;
+    }
+
+    return CharlatanHttpResponse(
+      body: result,
+      statusCode: statusCode,
+    );
+  }
 }
 
 /// {@template charlatan_http_response_match}
@@ -90,9 +115,7 @@ class CharlatanHttpResponseMatch {
 }
 
 /// {@template charlatan_http_request}
-/// A type representing a match of a path string to a [CharlatanHttpResponseDefinition].
-///
-/// This match contains any parameters extracted from the path's URI template.
+/// A type representing a HTTP request and any extract path parameters.
 /// {@endtemplate}
 class CharlatanHttpRequest {
   /// The matching parameters extracted from the path of this request
@@ -105,5 +128,26 @@ class CharlatanHttpRequest {
   CharlatanHttpRequest({
     required this.pathParameters,
     required this.requestOptions,
+  });
+}
+
+/// {@template charlatan_http_response}
+/// A type representing a HTTP response.
+/// {@endtemplate}
+class CharlatanHttpResponse {
+  /// The body of the HTTP response
+  final Object? body;
+
+  /// The status code of the HTTP response, defaults to 200
+  final int statusCode;
+
+  /// The headers for the HTTP response, defaults to empty
+  final Map<String, String> headers;
+
+  /// {@macro charlatan_http_response}
+  CharlatanHttpResponse({
+    this.body,
+    this.statusCode = 200,
+    this.headers = const {},
   });
 }
