@@ -50,7 +50,7 @@ If you need to further customize the response, you can return a
 
 ```dart
 charlatan.whenPost('/users', (req) {
-  final data = request.data as Map<String, dynamic>;
+  final data = req.data as Map<String, dynamic>;
   final name = data['name'] as String?;
   if (name == null) {
     return CharlatanHttpResponse(
