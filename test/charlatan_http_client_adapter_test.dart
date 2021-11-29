@@ -138,6 +138,27 @@ DELETE /users
       expect(result.data, {'name': 'frodo'});
     });
 
+    test('it supports returning a CharlatanHttpResponse', () async {
+      charlatan.whenPost('/user', (request) {
+        return CharlatanHttpResponse(
+          statusCode: 201,
+          body: {'name': 'frodo'},
+          headers: {'x-cool-header': 'cool-value'},
+        );
+      });
+
+      final result = await client.post<Object?>('/user');
+      expect(result.statusCode, 201);
+      expect(result.data, {'name': 'frodo'});
+      expect(
+        result.headers.map,
+        {
+          'content-type': ['application/json'],
+          'x-cool-header': ['cool-value'],
+        },
+      );
+    });
+
     group('whenGet', () {
       test('it returns a 200 status by default', () async {
         charlatan.whenGet('/user', (request) => null);

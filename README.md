@@ -45,6 +45,31 @@ charlatan.whenPut('/users/{id}/profile', (_) => null, statusCode: 204);
 charlatan.whenDelete('/users/{id}', (_) => null, statusCode: 204);
 ```
 
+If you need to further customize the response, you can return a
+`CharlatanHttpResponse`.
+
+```dart
+charlatan.whenPost('/users', (req) {
+  final data = req.data as Map<String, dynamic>;
+  final name = data['name'] as String?;
+  if (name == null) {
+    return CharlatanHttpResponse(
+      statusCode: 422,
+      body: {
+        'errors': {
+          'name': ['cannot be blank'],
+        },
+      },
+    )
+  }
+
+  return CharlatanHttpResponse(
+    statusCode: 201,
+    body: { 'id': 1, 'name': name },
+  );
+});
+```
+
 ### Building a fake HTTP client
 
 Build the `CharlatanHttpClientAdapter` from the `Charlatan` instance and then

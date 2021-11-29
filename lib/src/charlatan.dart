@@ -20,62 +20,66 @@ class Charlatan {
   void silenceErrors() => shouldLogErrors = false;
 
   /// Adds a fake response definition for a GET request to the provided
-  /// [pathOrTemplate] with the corresponding [statusCode].
+  /// [pathOrTemplate]. If the response is not a [CharlatanHttpResponse] then
+  /// the [statusCode] will be used.
   void whenGet(
     String pathOrTemplate,
-    CharlatanResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
       httpMethod: 'get',
       pathOrTemplate: pathOrTemplate,
       statusCode: statusCode,
-      responseBodyBuilder: responseBodyBuilder,
+      responseBuilder: responseBuilder,
     );
   }
 
   /// Adds a fake response definition for a POST request to the provided
-  /// [pathOrTemplate] with the corresponding [statusCode].
+  /// [pathOrTemplate]. If the response is not a [CharlatanHttpResponse] then
+  /// the [statusCode] will be used.
   void whenPost(
     String pathOrTemplate,
-    CharlatanResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
       httpMethod: 'post',
       pathOrTemplate: pathOrTemplate,
       statusCode: statusCode,
-      responseBodyBuilder: responseBodyBuilder,
+      responseBuilder: responseBuilder,
     );
   }
 
   /// Adds a fake response definition for a PUT request to the provided
-  /// [pathOrTemplate] with the corresponding [statusCode].
+  /// [pathOrTemplate]. If the response is not a [CharlatanHttpResponse] then
+  /// the [statusCode] will be used.
   void whenPut(
     String pathOrTemplate,
-    CharlatanResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
       httpMethod: 'put',
       pathOrTemplate: pathOrTemplate,
       statusCode: statusCode,
-      responseBodyBuilder: responseBodyBuilder,
+      responseBuilder: responseBuilder,
     );
   }
 
   /// Adds a fake response definition for a DELETE request to the provided
-  /// [pathOrTemplate] with the corresponding [statusCode].
+  /// [pathOrTemplate]. If the response is not a [CharlatanHttpResponse] then
+  /// the [statusCode] will be used.
   void whenDelete(
     String pathOrTemplate,
-    CharlatanResponseBodyBuilder responseBodyBuilder, {
+    CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
     _addDefintionForHttpMethod(
       httpMethod: 'delete',
       pathOrTemplate: pathOrTemplate,
       statusCode: statusCode,
-      responseBodyBuilder: responseBodyBuilder,
+      responseBuilder: responseBuilder,
     );
   }
 
@@ -83,13 +87,13 @@ class Charlatan {
     required String httpMethod,
     required String pathOrTemplate,
     required int statusCode,
-    required CharlatanResponseBodyBuilder responseBodyBuilder,
+    required CharlatanResponseBuilder responseBuilder,
   }) {
     final definition = CharlatanHttpResponseDefinition(
       statusCode: statusCode,
       httpMethod: httpMethod,
       pathOrTemplate: pathOrTemplate,
-      responseBodyBuilder: responseBodyBuilder,
+      responseBuilder: responseBuilder,
     );
 
     getDefinitionsForHttpMethod(httpMethod)
