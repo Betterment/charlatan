@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:charlatan/charlatan.dart';
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
@@ -52,8 +50,7 @@ void main() {
       ..whenPost(
         '/posts',
         (request) {
-          final params = json.decode(request.requestOptions.data as String)
-              as Map<String, Object?>;
+          final params = request.body as Map<String, Object?>? ?? {};
           posts.add({'name': params['name']});
           return null;
         },
