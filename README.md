@@ -60,7 +60,7 @@ charlatan.whenPost('/users', (req) {
           'name': ['cannot be blank'],
         },
       },
-    )
+    );
   }
 
   return CharlatanHttpResponse(
