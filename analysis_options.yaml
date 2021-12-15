@@ -7,9 +7,6 @@ linter:
     - sort_pub_dependencies
 
 analyzer:
-  exclude:
-    - "**/*.freezed.dart"
-    - "**/*.g.dart"
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
