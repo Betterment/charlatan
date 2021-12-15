@@ -1,6 +1,8 @@
 name: charlatan
-description: Fake HTTP Adapter for Dio
+description: A library for configuring and providing fake HTTP responses to your dio HTTP client.
 version: 0.0.1
+homepage: https://github.com/Betterment/charlatan
+repository: https://github.com/Betterment/charlatan
 publish_to: none
 
 environment:
