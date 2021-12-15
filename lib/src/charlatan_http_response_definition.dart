@@ -16,6 +16,7 @@ import 'package:uri/uri.dart';
 /// can return an instance of [CharlatanHttpResponse].
 /// {@endtemplate}
 typedef CharlatanResponseBuilder = FutureOr<Object?> Function(
+  /// The request including path params, body, headers, options, etc
   CharlatanHttpRequest request,
 );
 
@@ -121,8 +122,23 @@ class CharlatanHttpRequest {
   /// The matching parameters extracted from the path of this request
   final Map<String, String> pathParameters;
 
-  /// The request headers, body, and options
+  /// The underlying dio request headers, body, and other options
   final RequestOptions requestOptions;
+
+  /// The HTTP method
+  String get method => requestOptions.method;
+
+  /// The request path
+  String get path => requestOptions.path;
+
+  /// The request query parameters
+  Map<String, Object?> get queryParameters => requestOptions.queryParameters;
+
+  /// The request headers
+  Map<String, Object?> get headers => requestOptions.headers;
+
+  /// The request body
+  Object? get body => requestOptions.data;
 
   /// {@macro charlatan_http_request}
   CharlatanHttpRequest({
