@@ -24,7 +24,7 @@ jobs:
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
-      
+
       - name: Analyze project source
         uses: invertase/github-action-dart-analyzer@v1
 
