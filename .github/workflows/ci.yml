@@ -24,9 +24,9 @@ jobs:
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
-
+      
       - name: Analyze project source
-        run: dart analyze
+        uses: invertase/github-action-dart-analyzer@v1
 
       - name: Run tests and generate coverage report
         run: ./scripts/generate_code_coverage.sh
