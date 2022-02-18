@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: There is a problem in how fake_http behaves
+about: There is a problem in how charlatan behaves
 title: ""
 labels: bug
 ---

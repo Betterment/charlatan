@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for fake_http
+about: Suggest an idea for charlatan
 title: ""
 labels: enhancement
 ---
