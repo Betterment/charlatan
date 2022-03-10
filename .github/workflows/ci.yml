@@ -33,8 +33,7 @@ jobs:
 
       - uses: codecov/codecov-action@v2
         with:
-          files: packages/${{ inputs.package-name }}/coverage/lcov.info
-          working-directory: packages/${{ inputs.package-name }}
+          files: coverage/lcov.info
   
   pana:
     runs-on: ubuntu-latest
