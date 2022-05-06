@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:charlatan/charlatan.dart';
@@ -114,6 +115,31 @@ DELETE /users
         options: Options(responseType: ResponseType.bytes),
       );
       expect(result.data, Uint8List(1));
+    });
+
+    test('it supports plain response bodies', () async {
+      charlatan.whenGet(
+        '/foo',
+        (request) => CharlatanHttpResponse(
+          headers: <String, String>{
+            'Content-type': 'text/plain',
+          },
+          body: 'Hello, world!',
+          statusCode: 200,
+        ),
+      );
+
+      final result = await client.get<Object?>(
+        '/foo',
+        options: Options(
+          contentType: ContentType.text.value,
+          responseType: ResponseType.plain,
+          headers: <String, dynamic>{
+            'Content-type': 'text/plain',
+          },
+        ),
+      );
+      expect(result.data, 'Hello, world!');
     });
 
     test('it provides the path parameters to the response builder', () async {
