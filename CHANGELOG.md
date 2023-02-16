@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Upgrade `dio` to `5.0.0`
+
 ## 0.1.0
 
 - Upgrade `dio` and `test`
