@@ -52,10 +52,7 @@ void main() {
         requestOptions: requestOptions,
       );
 
-      expect(subject.headers, {
-        ...headers,
-        'content-type': 'application/json; charset=utf-8',
-      });
+      expect(subject.headers, {...headers});
     });
 
     test('it proxies the query parameters from the request options', () {

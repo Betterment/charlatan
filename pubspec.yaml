@@ -1,6 +1,6 @@
 name: charlatan
 description: A library for configuring and providing fake HTTP responses to your dio HTTP client.
-version: 0.1.0
+version: 0.2.0
 homepage: https://github.com/Betterment/charlatan
 repository: https://github.com/Betterment/charlatan
 
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  dio: ^4.0.4
+  dio: ^5.0.0
   meta: ^1.7.0
   uri: ^1.0.0
 
