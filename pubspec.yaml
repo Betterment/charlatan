@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  dio: ^4.0.4
+  dio: ^5.0.0
   meta: ^1.7.0
   uri: ^1.0.0
 
