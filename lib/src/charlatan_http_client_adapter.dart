@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:charlatan/src/charlatan.dart';
-import 'package:charlatan/src/charlatan_http_response_definition.dart';
-import 'package:collection/collection.dart';
+import 'package:charlatan/src/charlatan_response_definition.dart';
 import 'package:dio/dio.dart';
 
 /// {@template charlatan_http_client_adapter}
@@ -32,18 +31,13 @@ class CharlatanHttpClientAdapter implements HttpClientAdapter {
   ) async {
     final path = options.path;
     final method = options.method.toLowerCase();
-    final possibleDefinitions = charlatan.getDefinitionsForHttpMethod(method);
-    final match = possibleDefinitions
-        .map((d) => d.computeMatch(path))
-        .firstWhereOrNull((m) => m != null);
+    final request = CharlatanHttpRequest(
+      requestOptions: options,
+    );
+    final match = charlatan.findMatch(request);
 
     if (match != null) {
-      final definition = match.definition;
-      final request = CharlatanHttpRequest(
-        pathParameters: match.pathParameters,
-        requestOptions: options,
-      );
-      return _buildResponse(definition, request);
+      return _buildResponse(request, match);
     }
 
     final errorMessage = '''
@@ -72,8 +66,8 @@ ${charlatan.toPrettyPrintedString()}
 }
 
 Future<ResponseBody> _buildResponse(
-  CharlatanHttpResponseDefinition definition,
   CharlatanHttpRequest request,
+  CharlatanResponseDefinition definition,
 ) async {
   final response = await definition.buildResponse(request);
   final responseType = request.requestOptions.responseType;
@@ -93,7 +87,7 @@ Future<ResponseBody> _buildResponse(
   } else if (responseType == ResponseType.bytes) {
     return ResponseBody.fromBytes(
       response.body as Uint8List,
-      definition.statusCode,
+      response.statusCode,
       headers: {
         for (final header in response.headers.entries)
           header.key: [header.value],

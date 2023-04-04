@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Add `whenMatch` for more complex matching scenarios
+- Remove `CharlatanHttpRequest#pathParameters`
+
 ## 0.2.0
 
 - Upgrade `dio` to `5.0.0`

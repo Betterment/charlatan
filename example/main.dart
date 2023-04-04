@@ -18,23 +18,36 @@ void main() {
     expect(plain.data, {'name': 'frodo'});
   });
 
-  test('Use a URI template and use the path parameters in the response',
-      () async {
-    charlatan.whenGet(
-      '/user/{id}',
-      (request) => {
-        'id': request.pathParameters['id'],
-        'name': 'frodo',
-      },
-    );
-
-    final withPathParams = await client.get<Object?>('/user/12');
-    expect(withPathParams.data, {'id': '12', 'name': 'frodo'});
-  });
-
   test('Use a custom status code and an empty body', () async {
     charlatan.whenGet(
       '/posts',
+      (_) => null,
+      statusCode: 204,
+    );
+
+    final emptyBody = await client.get<Object?>('/posts');
+    expect(emptyBody.data, '');
+    expect(emptyBody.statusCode, 204);
+  });
+
+  test('Use a custom request matcher', () async {
+    charlatan.whenMatch(
+      (request) => request.method == 'GET' && request.path == '/posts',
+      (_) => null,
+      statusCode: 204,
+    );
+
+    final emptyBody = await client.get<Object?>('/posts');
+    expect(emptyBody.data, '');
+    expect(emptyBody.statusCode, 204);
+  });
+
+  test('Use a custom request matcher with helpers', () async {
+    charlatan.whenMatch(
+      requestMatchesAll([
+        requestMatchesHttpMethod('GET'),
+        requestMatchesPathOrTemplate('/posts'),
+      ]),
       (_) => null,
       statusCode: 204,
     );
