@@ -142,6 +142,8 @@ class Charlatan {
       return 'No definitions.';
     }
 
-    return _matchers.map((def) => def.description).join('\n');
+    // the reversed here is because we insert new matchers at the front of the
+    // list, but we want to print them in the order they were added.
+    return _matchers.reversed.map((def) => def.description).join('\n');
   }
 }

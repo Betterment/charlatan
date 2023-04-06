@@ -80,7 +80,7 @@ void main() {
         throwsA(
           isA<Exception>().having(
             (e) => e.toString(),
-            '',
+            'message',
             contains('''
 Unable to find matching fake http response definition for:
 
