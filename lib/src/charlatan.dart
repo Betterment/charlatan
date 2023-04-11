@@ -1,4 +1,5 @@
-import 'package:charlatan/src/charlatan_http_response_definition.dart';
+import 'package:charlatan/src/charlatan_response_definition.dart';
+import 'package:collection/collection.dart';
 
 /// {@template charlatan}
 /// A class for building a collection of fake http responses to power a fake
@@ -11,13 +12,36 @@ import 'package:charlatan/src/charlatan_http_response_definition.dart';
 /// ```
 /// {@endtemplate}
 class Charlatan {
-  final Map<String, List<CharlatanHttpResponseDefinition>> _mapping = {};
-
   /// {@nodoc}
   bool shouldLogErrors = true;
 
   /// {@nodoc}
   void silenceErrors() => shouldLogErrors = false;
+
+  final List<CharlatanResponseDefinition> _matchers = [];
+
+  /// Adds a fake response definition for a request that matches the provided
+  /// [requestMatcher]. If the response is not a [CharlatanHttpResponse] then
+  /// the [statusCode] will be used.
+  ///
+  /// [description] is used to describe the response for debugging; it defaults
+  /// to 'Custom Matcher' but should be provided for clarity, e.g. 'GET /users/123?q=foo'
+  void whenMatch(
+    CharlatanRequestMatcher requestMatcher,
+    CharlatanResponseBuilder responseBuilder, {
+    int statusCode = 200,
+    String? description,
+  }) {
+    _matchers.insert(
+      0,
+      CharlatanResponseDefinition(
+        description: description ?? 'Custom Matcher',
+        requestMatcher: requestMatcher,
+        responseBuilder: responseBuilder,
+        defaultStatusCode: statusCode,
+      ),
+    );
+  }
 
   /// Adds a fake response definition for a GET request to the provided
   /// [pathOrTemplate]. If the response is not a [CharlatanHttpResponse] then
@@ -27,11 +51,17 @@ class Charlatan {
     CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
-    _addDefintionForHttpMethod(
-      httpMethod: 'get',
-      pathOrTemplate: pathOrTemplate,
-      statusCode: statusCode,
-      responseBuilder: responseBuilder,
+    _matchers.insert(
+      0,
+      CharlatanResponseDefinition(
+        description: 'GET $pathOrTemplate',
+        requestMatcher: requestMatchesAll([
+          requestMatchesHttpMethod('get'),
+          requestMatchesPathOrTemplate(pathOrTemplate),
+        ]),
+        responseBuilder: responseBuilder,
+        defaultStatusCode: statusCode,
+      ),
     );
   }
 
@@ -43,11 +73,17 @@ class Charlatan {
     CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
-    _addDefintionForHttpMethod(
-      httpMethod: 'post',
-      pathOrTemplate: pathOrTemplate,
-      statusCode: statusCode,
-      responseBuilder: responseBuilder,
+    _matchers.insert(
+      0,
+      CharlatanResponseDefinition(
+        description: 'POST $pathOrTemplate',
+        requestMatcher: requestMatchesAll([
+          requestMatchesHttpMethod('post'),
+          requestMatchesPathOrTemplate(pathOrTemplate),
+        ]),
+        responseBuilder: responseBuilder,
+        defaultStatusCode: statusCode,
+      ),
     );
   }
 
@@ -59,11 +95,17 @@ class Charlatan {
     CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
-    _addDefintionForHttpMethod(
-      httpMethod: 'put',
-      pathOrTemplate: pathOrTemplate,
-      statusCode: statusCode,
-      responseBuilder: responseBuilder,
+    _matchers.insert(
+      0,
+      CharlatanResponseDefinition(
+        description: 'PUT $pathOrTemplate',
+        requestMatcher: requestMatchesAll([
+          requestMatchesHttpMethod('put'),
+          requestMatchesPathOrTemplate(pathOrTemplate),
+        ]),
+        responseBuilder: responseBuilder,
+        defaultStatusCode: statusCode,
+      ),
     );
   }
 
@@ -75,62 +117,33 @@ class Charlatan {
     CharlatanResponseBuilder responseBuilder, {
     int statusCode = 200,
   }) {
-    _addDefintionForHttpMethod(
-      httpMethod: 'delete',
-      pathOrTemplate: pathOrTemplate,
-      statusCode: statusCode,
-      responseBuilder: responseBuilder,
+    _matchers.insert(
+      0,
+      CharlatanResponseDefinition(
+        description: 'DELETE $pathOrTemplate',
+        requestMatcher: requestMatchesAll([
+          requestMatchesHttpMethod('delete'),
+          requestMatchesPathOrTemplate(pathOrTemplate),
+        ]),
+        responseBuilder: responseBuilder,
+        defaultStatusCode: statusCode,
+      ),
     );
   }
 
-  void _addDefintionForHttpMethod({
-    required String httpMethod,
-    required String pathOrTemplate,
-    required int statusCode,
-    required CharlatanResponseBuilder responseBuilder,
-  }) {
-    final definition = CharlatanHttpResponseDefinition(
-      statusCode: statusCode,
-      httpMethod: httpMethod,
-      pathOrTemplate: pathOrTemplate,
-      responseBuilder: responseBuilder,
-    );
-
-    getDefinitionsForHttpMethod(httpMethod)
-      // we're removing exact matches for house-keeping purposes. technically,
-      // it's totally fine to just insert at the beginning and not remove an
-      // existing exact match, but it feels weird to have a data structure that
-      // contains responses with duplicate pathOrTemplate knowing that only one
-      // of them can ever be matched.
-      ..removeWhere((possibleDefinition) =>
-          possibleDefinition.pathOrTemplate == pathOrTemplate)
-      // this is the important part. we want to always insert new entries at the
-      // beginning of the list because that matches the expecations of the user
-      // in terms of how overriding a fake response would work.
-      ..insert(0, definition);
-  }
-
-  /// Returns all the matching [CharlatanHttpResponseDefinition]s for the provided
-  /// [httpMethod] or an empty list.
-  List<CharlatanHttpResponseDefinition> getDefinitionsForHttpMethod(
-    String httpMethod,
-  ) {
-    return _mapping.putIfAbsent(httpMethod, () => []);
+  /// Returns the first fake response definition that matches the provided [request].
+  CharlatanResponseDefinition? findMatch(CharlatanHttpRequest request) {
+    return _matchers.firstWhereOrNull((matcher) => matcher.matches(request));
   }
 
   /// Prints a human-readable list of all the registered fake responses.
   String toPrettyPrintedString() {
-    if (_mapping.entries.isEmpty) {
-      return 'No responses defined.';
+    if (_matchers.isEmpty) {
+      return 'No definitions.';
     }
 
-    return _mapping.entries
-        .expand<String>(
-          (entry) => entry.value.map(
-            (definition) =>
-                '${definition.httpMethod.toUpperCase()} ${definition.pathOrTemplate}',
-          ),
-        )
-        .join('\n');
+    // the reversed here is because we insert new matchers at the front of the
+    // list, but we want to print them in the order they were added.
+    return _matchers.reversed.map((def) => def.description).join('\n');
   }
 }

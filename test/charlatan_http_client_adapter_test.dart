@@ -80,7 +80,7 @@ void main() {
         throwsA(
           isA<Exception>().having(
             (e) => e.toString(),
-            '',
+            'message',
             contains('''
 Unable to find matching fake http response definition for:
 
@@ -116,18 +116,6 @@ DELETE /users
       expect(result.data, Uint8List(1));
     });
 
-    test('it provides the path parameters to the response builder', () async {
-      charlatan.whenGet(
-        '/users/{id}/{other}',
-        (request) => {'pathParameters': request.pathParameters},
-      );
-
-      final result = await client.get<Object?>('/users/12/something');
-      expect(result.data, {
-        'pathParameters': {'id': '12', 'other': 'something'}
-      });
-    });
-
     test('it supports async response body builders', () async {
       charlatan.whenGet(
         '/user',
@@ -157,6 +145,37 @@ DELETE /users
           'x-cool-header': ['cool-value'],
         },
       );
+    });
+
+    group('whenMatch', () {
+      test('it returns a 200 status by default', () async {
+        charlatan.whenMatch(
+          (request) => request.path == '/user',
+          (request) => null,
+        );
+
+        final result = await client.get<Object?>('/user');
+        expect(result.statusCode, 200);
+      });
+
+      test('it returns the provided status', () async {
+        charlatan.whenMatch(
+          (request) => request.path == '/user',
+          (request) => null,
+          statusCode: 404,
+        );
+
+        expect(
+          client.get<Object?>('/user'),
+          throwsA(
+            isA<DioError>().having(
+              (e) => e.response?.statusCode,
+              'is a 404',
+              404,
+            ),
+          ),
+        );
+      });
     });
 
     group('whenGet', () {

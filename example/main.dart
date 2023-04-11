@@ -1,6 +1,7 @@
 import 'package:charlatan/charlatan.dart';
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
+import 'package:uri/uri.dart';
 
 void main() {
   late Dio client;
@@ -18,13 +19,19 @@ void main() {
     expect(plain.data, {'name': 'frodo'});
   });
 
-  test('Use a URI template and use the path parameters in the response',
-      () async {
+  test('Use a URI template', () async {
+    final pathWithTemplate = '/users/{id}';
     charlatan.whenGet(
-      '/user/{id}',
-      (request) => {
-        'id': request.pathParameters['id'],
-        'name': 'frodo',
+      pathWithTemplate,
+      (request) {
+        final uri = Uri.parse(request.path);
+        final template = UriTemplate(pathWithTemplate);
+        final parser = UriParser(template);
+        final pathParameters = parser.parse(uri);
+        return {
+          'id': pathParameters['id'],
+          'name': 'frodo',
+        };
       },
     );
 
@@ -40,7 +47,34 @@ void main() {
     );
 
     final emptyBody = await client.get<Object?>('/posts');
-    expect(emptyBody.data, '');
+    expect(emptyBody.data, null);
+    expect(emptyBody.statusCode, 204);
+  });
+
+  test('Use a custom request matcher', () async {
+    charlatan.whenMatch(
+      (request) => request.method == 'GET' && request.path == '/posts',
+      (_) => null,
+      statusCode: 204,
+    );
+
+    final emptyBody = await client.get<Object?>('/posts');
+    expect(emptyBody.data, null);
+    expect(emptyBody.statusCode, 204);
+  });
+
+  test('Use a custom request matcher with helpers', () async {
+    charlatan.whenMatch(
+      requestMatchesAll([
+        requestMatchesHttpMethod('GET'),
+        requestMatchesPathOrTemplate('/posts'),
+      ]),
+      (_) => null,
+      statusCode: 204,
+    );
+
+    final emptyBody = await client.get<Object?>('/posts');
+    expect(emptyBody.data, null);
     expect(emptyBody.statusCode, 204);
   });
 

@@ -5,7 +5,12 @@ import 'src/charlatan_http_client_adapter.dart';
 
 export 'src/charlatan.dart';
 export 'src/charlatan_http_client_adapter.dart';
-export 'src/charlatan_http_response_definition.dart' show CharlatanHttpResponse;
+export 'src/charlatan_response_definition.dart'
+    show
+        CharlatanHttpResponse,
+        requestMatchesAll,
+        requestMatchesHttpMethod,
+        requestMatchesPathOrTemplate;
 
 /// Utilities to make it easier to work with [Charlatan].
 extension CharlatanExtensions on Charlatan {

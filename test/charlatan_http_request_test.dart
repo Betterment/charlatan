@@ -1,4 +1,4 @@
-import 'package:charlatan/src/charlatan_http_response_definition.dart';
+import 'package:charlatan/src/charlatan_response_definition.dart';
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
 
@@ -9,7 +9,6 @@ void main() {
       final requestOptions = RequestOptions(path: path);
 
       final subject = CharlatanHttpRequest(
-        pathParameters: {},
         requestOptions: requestOptions,
       );
 
@@ -24,7 +23,6 @@ void main() {
       );
 
       final subject = CharlatanHttpRequest(
-        pathParameters: {},
         requestOptions: requestOptions,
       );
 
@@ -36,7 +34,6 @@ void main() {
       final requestOptions = RequestOptions(path: '/users', data: body);
 
       final subject = CharlatanHttpRequest(
-        pathParameters: {},
         requestOptions: requestOptions,
       );
 
@@ -48,7 +45,6 @@ void main() {
       final requestOptions = RequestOptions(path: '/users', headers: headers);
 
       final subject = CharlatanHttpRequest(
-        pathParameters: {},
         requestOptions: requestOptions,
       );
 
@@ -63,7 +59,6 @@ void main() {
       );
 
       final subject = CharlatanHttpRequest(
-        pathParameters: {},
         requestOptions: requestOptions,
       );
 
