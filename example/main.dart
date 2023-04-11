@@ -1,6 +1,7 @@
 import 'package:charlatan/charlatan.dart';
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
+import 'package:uri/uri.dart';
 
 void main() {
   late Dio client;
@@ -18,6 +19,26 @@ void main() {
     expect(plain.data, {'name': 'frodo'});
   });
 
+  test('Use a URI template', () async {
+    final pathWithTemplate = '/users/{id}';
+    charlatan.whenGet(
+      pathWithTemplate,
+      (request) {
+        final uri = Uri.parse(request.path);
+        final template = UriTemplate(pathWithTemplate);
+        final parser = UriParser(template);
+        final pathParameters = parser.parse(uri);
+        return {
+          'id': pathParameters['id'],
+          'name': 'frodo',
+        };
+      },
+    );
+
+    final withPathParams = await client.get<Object?>('/user/12');
+    expect(withPathParams.data, {'id': '12', 'name': 'frodo'});
+  });
+
   test('Use a custom status code and an empty body', () async {
     charlatan.whenGet(
       '/posts',
@@ -26,7 +47,7 @@ void main() {
     );
 
     final emptyBody = await client.get<Object?>('/posts');
-    expect(emptyBody.data, '');
+    expect(emptyBody.data, null);
     expect(emptyBody.statusCode, 204);
   });
 
@@ -38,7 +59,7 @@ void main() {
     );
 
     final emptyBody = await client.get<Object?>('/posts');
-    expect(emptyBody.data, '');
+    expect(emptyBody.data, null);
     expect(emptyBody.statusCode, 204);
   });
 
@@ -53,7 +74,7 @@ void main() {
     );
 
     final emptyBody = await client.get<Object?>('/posts');
-    expect(emptyBody.data, '');
+    expect(emptyBody.data, null);
     expect(emptyBody.statusCode, 204);
   });
 
