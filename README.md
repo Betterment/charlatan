@@ -10,13 +10,15 @@ responses from your [Dio HTTP Client](https://pub.dev/packages/dio).
 This makes it easy to test the behavior of code that interacts with
 HTTP services without having to use mocks.
 
-It consists of two components:
+It consists of a two components and a few helper functions:
 
 - `Charlatan` - a class for configuring and providing fake HTTP responses
   based on HTTP method and URI template.
 - `CharlatanHttpClientAdapter` - an implementation of Dio's
   `HttpClientAdapter` that returns responses from a configured
   `Charlatan` instance.
+- `charlatanResponse` and request matching helpers - utilites for concisely
+  matching HTTP requests and generating fake responses.
 
 ## Usage
 
@@ -46,10 +48,11 @@ charlatan.whenPut('/users/{id}/profile', charlatanResponse(statusCode: 204));
 charlatan.whenDelete('/users/{id}', (req) => CharlatanHttpResponse(statusCode: 204, body: { 'uri': req.path }));
 ```
 
-If you need to further customize the response, you can write
-a multiline lambda function that returns a `CharlatanHttpResponse`.
-This allows for dynamic values for the status code, body, and
-headers in the response.
+If you need to further customize the response, you can expand
+your fake response handler to include whatever you need. The
+only requirement is that it returns a `CharlatanHttpResponse`.
+This allows you to provide dynamic values for the status code,
+body, and headers in the response.
 
 ```dart
 charlatan.whenPost('/users', (req) {
@@ -74,7 +77,7 @@ charlatan.whenPost('/users', (req) {
 ```
 
 Additionally, if you need to match requests using other properties of the
-request, you can use `whenMatch`.
+request or with different logic, you can use `whenMatch`.
 
 ```dart
 charlatan.whenMatch(
