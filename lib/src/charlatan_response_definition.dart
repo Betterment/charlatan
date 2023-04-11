@@ -35,7 +35,8 @@ typedef CharlatanResponseBuilder = FutureOr<Object?> Function(
 /// provided [CharlatanRequestMatcher]s match.
 /// {@endtemplate}
 CharlatanRequestMatcher requestMatchesAll(
-        List<CharlatanRequestMatcher> matchers) =>
+  List<CharlatanRequestMatcher> matchers,
+) =>
     (request) => matchers.every((matcher) => matcher(request));
 
 /// {@template charlatan_matches_http_method}
