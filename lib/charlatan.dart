@@ -8,6 +8,7 @@ export 'src/charlatan_http_client_adapter.dart';
 export 'src/charlatan_response_definition.dart'
     show
         CharlatanHttpResponse,
+        charlatanResponse,
         requestMatchesAll,
         requestMatchesHttpMethod,
         requestMatchesPathOrTemplate;

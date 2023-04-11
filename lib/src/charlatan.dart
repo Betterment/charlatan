@@ -29,7 +29,6 @@ class Charlatan {
   void whenMatch(
     CharlatanRequestMatcher requestMatcher,
     CharlatanResponseBuilder responseBuilder, {
-    int statusCode = 200,
     String? description,
   }) {
     _matchers.insert(
@@ -38,7 +37,6 @@ class Charlatan {
         description: description ?? 'Custom Matcher',
         requestMatcher: requestMatcher,
         responseBuilder: responseBuilder,
-        defaultStatusCode: statusCode,
       ),
     );
   }
@@ -48,9 +46,8 @@ class Charlatan {
   /// the [statusCode] will be used.
   void whenGet(
     String pathOrTemplate,
-    CharlatanResponseBuilder responseBuilder, {
-    int statusCode = 200,
-  }) {
+    CharlatanResponseBuilder responseBuilder,
+  ) {
     _matchers.insert(
       0,
       CharlatanResponseDefinition(
@@ -60,7 +57,6 @@ class Charlatan {
           requestMatchesPathOrTemplate(pathOrTemplate),
         ]),
         responseBuilder: responseBuilder,
-        defaultStatusCode: statusCode,
       ),
     );
   }
@@ -70,9 +66,8 @@ class Charlatan {
   /// the [statusCode] will be used.
   void whenPost(
     String pathOrTemplate,
-    CharlatanResponseBuilder responseBuilder, {
-    int statusCode = 200,
-  }) {
+    CharlatanResponseBuilder responseBuilder,
+  ) {
     _matchers.insert(
       0,
       CharlatanResponseDefinition(
@@ -82,7 +77,6 @@ class Charlatan {
           requestMatchesPathOrTemplate(pathOrTemplate),
         ]),
         responseBuilder: responseBuilder,
-        defaultStatusCode: statusCode,
       ),
     );
   }
@@ -92,9 +86,8 @@ class Charlatan {
   /// the [statusCode] will be used.
   void whenPut(
     String pathOrTemplate,
-    CharlatanResponseBuilder responseBuilder, {
-    int statusCode = 200,
-  }) {
+    CharlatanResponseBuilder responseBuilder,
+  ) {
     _matchers.insert(
       0,
       CharlatanResponseDefinition(
@@ -104,7 +97,6 @@ class Charlatan {
           requestMatchesPathOrTemplate(pathOrTemplate),
         ]),
         responseBuilder: responseBuilder,
-        defaultStatusCode: statusCode,
       ),
     );
   }
@@ -114,9 +106,8 @@ class Charlatan {
   /// the [statusCode] will be used.
   void whenDelete(
     String pathOrTemplate,
-    CharlatanResponseBuilder responseBuilder, {
-    int statusCode = 200,
-  }) {
+    CharlatanResponseBuilder responseBuilder,
+  ) {
     _matchers.insert(
       0,
       CharlatanResponseDefinition(
@@ -126,7 +117,6 @@ class Charlatan {
           requestMatchesPathOrTemplate(pathOrTemplate),
         ]),
         responseBuilder: responseBuilder,
-        defaultStatusCode: statusCode,
       ),
     );
   }

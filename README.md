@@ -35,18 +35,21 @@ configuration method for the HTTP method you want to map a request to.
 
 You can configure fakes responses using a specific path or a URI
 template. You can also use the request object to customize your
-response.
+response. The easiest way to configure a response is with the
+`charlatanResponse` helper function.
 
 ```dart
 final charlatan = Charlatan();
-charlatan.whenPost('/users', (_) => { 'id': 1, 'bilbo' });
-charlatan.whenGet('/users/{id}', (req) => { 'id': req.pathParameters['id'], 'name': 'bilbo' });
-charlatan.whenPut('/users/{id}/profile', (_) => null, statusCode: 204);
-charlatan.whenDelete('/users/{id}', (_) => null, statusCode: 204);
+charlatan.whenPost('/users', charlatanResponse(body: { 'id': 1, 'bilbo' }));
+charlatan.whenGet('/users/{id}', charlatanResponse(body: { 'name': 'bilbo' }));
+charlatan.whenPut('/users/{id}/profile', charlatanResponse(statusCode: 204));
+charlatan.whenDelete('/users/{id}', (req) => CharlatanHttpResponse(statusCode: 204, body: { 'uri': req.path }));
 ```
 
-If you need to further customize the response, you can return a
-`CharlatanHttpResponse`.
+If you need to further customize the response, you can write
+a multiline lambda function that returns a `CharlatanHttpResponse`.
+This allows for dynamic values for the status code, body, and
+headers in the response.
 
 ```dart
 charlatan.whenPost('/users', (req) {
@@ -68,6 +71,16 @@ charlatan.whenPost('/users', (req) {
     body: { 'id': 1, 'name': name },
   );
 });
+```
+
+Additionally, if you need to match requests using other properties of the
+request, you can use `whenMatch`.
+
+```dart
+charlatan.whenMatch(
+  (req) => req.method == 'GET' && req.path.toLowerCase() == '/posts',
+  charlatanResponse(statusCode: 200),
+);
 ```
 
 ### Building a fake HTTP client

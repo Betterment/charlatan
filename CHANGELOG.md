@@ -1,3 +1,11 @@
+## 0.4.0
+
+- Add `charlatanResponse` helper to concisely create `CharlatanResponseBuilder` values
+- Remove `statusCode` from `when*` methods
+- Change type of `CharlatanResponseBuilder`
+  from `FutureOr<Object?> Function(CharlatanHttpRequest request, { int statusCode = 200 })`
+  to `FutureOr<CharlatanHttpResponse> Function(CharlatanHttpRequest request)`
+
 ## 0.3.0
 
 - Add `whenMatch` for more complex matching scenarios

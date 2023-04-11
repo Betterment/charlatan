@@ -15,14 +15,20 @@ void main() {
     });
 
     test('it matches a url without templated segments', () async {
-      charlatan.whenGet('/user', (request) => {'name': 'frodo'});
+      charlatan.whenGet(
+        '/user',
+        charlatanResponse(statusCode: 200, body: {'name': 'frodo'}),
+      );
 
       final result = await client.get<Object?>('/user');
       expect(result.data, {'name': 'frodo'});
     });
 
     test('it matches a url with templated segments', () async {
-      charlatan.whenGet('/users/{id}', (request) => {'name': 'frodo'});
+      charlatan.whenGet(
+        '/users/{id}',
+        charlatanResponse(statusCode: 200, body: {'name': 'frodo'}),
+      );
 
       final result = await client.get<Object?>('/users/12');
       expect(result.data, {'name': 'frodo'});
@@ -31,8 +37,8 @@ void main() {
     test('it matches the longest matching url with templated segments',
         () async {
       charlatan
-        ..whenGet('/users/{id}', (request) => {'name': 'frodo'})
-        ..whenGet('/users/{id}/profile', (request) => {'age': 12});
+        ..whenGet('/users/{id}', charlatanResponse(body: {'name': 'frodo'}))
+        ..whenGet('/users/{id}/profile', charlatanResponse(body: {'age': 12}));
 
       final result = await client.get<Object?>('/users/12/profile');
       expect(result.data, {'age': 12});
@@ -40,10 +46,10 @@ void main() {
 
     test('it disambiguates matches by http method', () async {
       charlatan
-        ..whenGet('/users', (request) => {'name': 'frodo'})
-        ..whenPost('/users', (request) => {'name': 'sam'})
-        ..whenPut('/users', (request) => {'name': 'gandalf'})
-        ..whenDelete('/users', (request) => {'name': 'bilbo'});
+        ..whenGet('/users', charlatanResponse(body: {'name': 'frodo'}))
+        ..whenPost('/users', charlatanResponse(body: {'name': 'sam'}))
+        ..whenPut('/users', charlatanResponse(body: {'name': 'gandalf'}))
+        ..whenDelete('/users', charlatanResponse(body: {'name': 'bilbo'}));
 
       final getResult = await client.get<Object?>('/users');
       expect(getResult.data, {'name': 'frodo'});
@@ -61,8 +67,8 @@ void main() {
     test('it overrides existing definitions for the same method and url',
         () async {
       charlatan
-        ..whenGet('/users', (request) => {'name': 'frodo'}) //
-        ..whenGet('/users', (request) => {'name': 'bilbo'});
+        ..whenGet('/users', charlatanResponse(body: {'name': 'frodo'})) //
+        ..whenGet('/users', charlatanResponse(body: {'name': 'bilbo'}));
 
       final getResult = await client.get<Object?>('/users');
       expect(getResult.data, {'name': 'bilbo'});
@@ -70,10 +76,10 @@ void main() {
 
     test('it returns a helpful error message when no match is found', () async {
       charlatan
-        ..whenGet('/users', (request) => {'name': 'frodo'})
-        ..whenPost('/users', (request) => {'name': 'sam'})
-        ..whenPut('/users', (request) => {'name': 'gandalf'})
-        ..whenDelete('/users', (request) => {'name': 'bilbo'});
+        ..whenGet('/users', charlatanResponse(body: {'name': 'frodo'}))
+        ..whenPost('/users', charlatanResponse(body: {'name': 'sam'}))
+        ..whenPut('/users', charlatanResponse(body: {'name': 'gandalf'}))
+        ..whenDelete('/users', charlatanResponse(body: {'name': 'bilbo'}));
 
       expect(
         () async => client.get<Object?>('/blahhhh'),
@@ -100,14 +106,15 @@ DELETE /users
     });
 
     test('it supports query strings', () async {
-      charlatan.whenGet('/users{?foo}', (request) => {'name': 'frodo'});
+      charlatan.whenGet(
+          '/users{?foo}', charlatanResponse(body: {'name': 'frodo'}));
 
       final result = await client.get<Object?>('/users?foo=bar');
       expect(result.data, {'name': 'frodo'});
     });
 
     test('it supports bytes response bodies', () async {
-      charlatan.whenGet('/user.png', (request) => Uint8List(1));
+      charlatan.whenGet('/user.png', charlatanResponse(body: Uint8List(1)));
 
       final result = await client.get<Object?>(
         '/user.png',
@@ -119,7 +126,8 @@ DELETE /users
     test('it supports async response body builders', () async {
       charlatan.whenGet(
         '/user',
-        (_) async => Future.delayed(Duration.zero, () => {'name': 'frodo'}),
+        (_) async => Future.delayed(Duration.zero,
+            () => CharlatanHttpResponse(body: {'name': 'frodo'})),
       );
 
       final result = await client.get<Object?>('/user');
@@ -151,7 +159,7 @@ DELETE /users
       test('it returns a 200 status by default', () async {
         charlatan.whenMatch(
           (request) => request.path == '/user',
-          (request) => null,
+          charlatanResponse(),
         );
 
         final result = await client.get<Object?>('/user');
@@ -161,8 +169,7 @@ DELETE /users
       test('it returns the provided status', () async {
         charlatan.whenMatch(
           (request) => request.path == '/user',
-          (request) => null,
-          statusCode: 404,
+          charlatanResponse(statusCode: 404),
         );
 
         expect(
@@ -180,14 +187,14 @@ DELETE /users
 
     group('whenGet', () {
       test('it returns a 200 status by default', () async {
-        charlatan.whenGet('/user', (request) => null);
+        charlatan.whenGet('/user', charlatanResponse());
 
         final result = await client.get<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        charlatan.whenGet('/user', (request) => null, statusCode: 404);
+        charlatan.whenGet('/user', charlatanResponse(statusCode: 404));
 
         expect(
           client.get<Object?>('/user'),
@@ -204,14 +211,14 @@ DELETE /users
 
     group('whenPost', () {
       test('it returns a 200 status by default', () async {
-        charlatan.whenPost('/user', (request) => null);
+        charlatan.whenPost('/user', charlatanResponse());
 
         final result = await client.post<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        charlatan.whenPost('/user', (request) => null, statusCode: 404);
+        charlatan.whenPost('/user', charlatanResponse(statusCode: 404));
 
         expect(
           client.post<Object?>('/user'),
@@ -228,14 +235,14 @@ DELETE /users
 
     group('whenPut', () {
       test('it returns a 200 status by default', () async {
-        charlatan.whenPut('/user', (request) => null);
+        charlatan.whenPut('/user', charlatanResponse());
 
         final result = await client.put<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        charlatan.whenPut('/user', (request) => null, statusCode: 404);
+        charlatan.whenPut('/user', charlatanResponse(statusCode: 404));
 
         expect(
           client.put<Object?>('/user'),
@@ -252,14 +259,14 @@ DELETE /users
 
     group('whenDelete', () {
       test('it returns a 200 status by default', () async {
-        charlatan.whenDelete('/user', (request) => null);
+        charlatan.whenDelete('/user', charlatanResponse());
 
         final result = await client.delete<Object?>('/user');
         expect(result.statusCode, 200);
       });
 
       test('it returns the provided status', () async {
-        charlatan.whenDelete('/user', (request) => null, statusCode: 404);
+        charlatan.whenDelete('/user', charlatanResponse(statusCode: 404));
 
         expect(
           client.delete<Object?>('/user'),

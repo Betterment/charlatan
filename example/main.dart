@@ -13,7 +13,10 @@ void main() {
   });
 
   test('Create a plain fake response', () async {
-    charlatan.whenGet('/user', (_) => {'name': 'frodo'});
+    charlatan.whenGet(
+      '/user',
+      charlatanResponse(statusCode: 200, body: {'name': 'frodo'}),
+    );
 
     final plain = await client.get<Object?>('/user');
     expect(plain.data, {'name': 'frodo'});
@@ -28,22 +31,24 @@ void main() {
         final template = UriTemplate(pathWithTemplate);
         final parser = UriParser(template);
         final pathParameters = parser.parse(uri);
-        return {
-          'id': pathParameters['id'],
-          'name': 'frodo',
-        };
+        return CharlatanHttpResponse(
+          statusCode: 200,
+          body: {
+            'id': pathParameters['id'],
+            'name': 'frodo',
+          },
+        );
       },
     );
 
-    final withPathParams = await client.get<Object?>('/user/12');
+    final withPathParams = await client.get<Object?>('/users/12');
     expect(withPathParams.data, {'id': '12', 'name': 'frodo'});
   });
 
   test('Use a custom status code and an empty body', () async {
     charlatan.whenGet(
       '/posts',
-      (_) => null,
-      statusCode: 204,
+      charlatanResponse(statusCode: 204),
     );
 
     final emptyBody = await client.get<Object?>('/posts');
@@ -54,8 +59,7 @@ void main() {
   test('Use a custom request matcher', () async {
     charlatan.whenMatch(
       (request) => request.method == 'GET' && request.path == '/posts',
-      (_) => null,
-      statusCode: 204,
+      charlatanResponse(statusCode: 204),
     );
 
     final emptyBody = await client.get<Object?>('/posts');
@@ -69,8 +73,7 @@ void main() {
         requestMatchesHttpMethod('GET'),
         requestMatchesPathOrTemplate('/posts'),
       ]),
-      (_) => null,
-      statusCode: 204,
+      charlatanResponse(statusCode: 204),
     );
 
     final emptyBody = await client.get<Object?>('/posts');
@@ -128,13 +131,12 @@ void main() {
         (request) {
           final params = request.body as Map<String, Object?>? ?? {};
           posts.add({'name': params['name']});
-          return null;
+          return CharlatanHttpResponse(statusCode: 204);
         },
-        statusCode: 204,
       )
       ..whenGet(
         '/posts',
-        (_) => {'posts': posts},
+        charlatanResponse(body: {'posts': posts}),
       );
 
     final beforeCreatePost = await client.get<Object?>('/posts');
