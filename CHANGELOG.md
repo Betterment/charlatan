@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Export `CharlatanHttpRequest` and `CharlatanRequestMatcher`
+
 ## 0.3.0
 
 - Add `whenMatch` for more complex matching scenarios
