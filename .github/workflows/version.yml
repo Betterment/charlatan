@@ -1,0 +1,17 @@
+name: Versioning
+
+on:
+  push:
+    branches: [bt/automate-versioning]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 25
+      - name: Get version
+        id: version
+        uses: paulhatch/semantic-version@v5.0.2
