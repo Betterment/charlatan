@@ -19,6 +19,8 @@ jobs:
         id: latest-release
         uses: pozetroninc/github-action-get-latest-release@v0.7.0
         with:
+          owner: Betterment
+          repo: charlatan
           excludes: prerelease, draft
       - name: Generate release notes
         id: release-notes
