@@ -76,7 +76,7 @@ void main() {
         ..whenDelete('/users', (request) => {'name': 'bilbo'});
 
       expect(
-        () async => client.get<Object?>('/blahhhh'),
+        () async => client.get<Object?>('/blahhhh', data: 'FakeData'),
         throwsA(
           isA<Exception>().having(
             (e) => e.toString(),
@@ -84,7 +84,7 @@ void main() {
             contains('''
 Unable to find matching fake http response definition for:
 
-GET /blahhhh
+GET /blahhhh FakeData
 
 Did you configure it?
 
