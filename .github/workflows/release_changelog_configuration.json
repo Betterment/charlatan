@@ -1,0 +1,69 @@
+{
+    "categories": [
+        {
+            "title": "## 🚀 Features",
+            "labels": [
+                "feat"
+            ]
+        },
+        {
+            "title": "## 🐛 Fixes",
+            "labels": [
+                "fix"
+            ]
+        },
+        {
+            "title": "## 🧹 Chores",
+            "labels": [
+                "chore"
+            ]
+        },
+        {
+            "title": "## 📚 Docs",
+            "labels": [
+                "docs"
+            ]
+        },
+        {
+            "title": "## 👷 Refactors",
+            "labels": [
+                "refactor"
+            ]
+        },
+        {
+            "title": "## 🧪 Tests",
+            "labels": [
+                "test"
+            ]
+        },
+        {
+            "title": "## 🛠️ CI",
+            "labels": [
+                "ci"
+            ]
+        },
+        {
+            "title": "## 👕 Style",
+            "labels": [
+                "style"
+            ]
+        },
+        {
+            "title": "## 🥸 Other",
+            "labels": [
+                "other"
+            ]
+        }
+    ],
+    "label_extractor": [
+        {
+            "pattern": "^(feat|chore|style|docs|fix|refactor|ci|test)",
+            "target": "$1",
+            "on_property": "title",
+            "on_empty": "other",
+            "method": "match"
+        }
+    ],
+    "template": "${{CHANGELOG}}",
+    "pr_template": "- ${{TITLE}} (${{MERGE_SHA}}) [${{AUTHOR}}]"
+}
