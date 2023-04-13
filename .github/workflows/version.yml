@@ -22,3 +22,5 @@ jobs:
           fromTag: v0.3.0
           toTag: v0.4.0
           configuration: .github/workflows/release_changelog_configuration.json
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
