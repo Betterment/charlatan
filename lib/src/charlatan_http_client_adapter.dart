@@ -44,7 +44,7 @@ class CharlatanHttpClientAdapter implements HttpClientAdapter {
 
 Unable to find matching fake http response definition for:
 
-${method.toUpperCase()} $path
+${method.toUpperCase()} $path ${options.data}
 
 Did you configure it?
 

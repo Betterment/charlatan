@@ -7,7 +7,9 @@ export 'src/charlatan.dart';
 export 'src/charlatan_http_client_adapter.dart';
 export 'src/charlatan_response_definition.dart'
     show
+        CharlatanHttpRequest,
         CharlatanHttpResponse,
+        CharlatanRequestMatcher,
         requestMatchesAll,
         requestMatchesHttpMethod,
         requestMatchesPathOrTemplate;

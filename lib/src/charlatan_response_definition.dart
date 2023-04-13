@@ -84,7 +84,7 @@ class CharlatanResponseDefinition {
   /// The callback that produces the response.
   final CharlatanResponseBuilder responseBuilder;
 
-  /// The default status code to use if the [responseBuilder] does not return.
+  /// The default status code to use if the [responseBuilder] does not return
   /// a [CharlatanHttpResponse].
   final int defaultStatusCode;
 
