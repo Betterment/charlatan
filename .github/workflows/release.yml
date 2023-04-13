@@ -1,4 +1,4 @@
-name: Versioning
+name: Release
 
 on:
   push:
@@ -15,12 +15,16 @@ jobs:
       - name: Get version
         id: version
         uses: paulhatch/semantic-version@v5.0.2
+      - name: Get Latest Release
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        with:
+          excludes: prerelease, draft
       - name: Generate release notes
         id: release-notes
         uses: mikepenz/release-changelog-builder-action@3a70419f3cc01ac7458a4fa44f09726475edfc6a # v3.4.0
         with:
-          fromTag: v0.3.0
-          toTag: v0.4.0
+          fromTag: v0.3.0 
+          toTag: v0.4.0 # Needs to be HEAD
           configuration: .github/workflows/release_changelog_configuration.json
         env:
           GITHUB_TOKEN: ${{ github.token }}
