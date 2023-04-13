@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 25
+          fetch-depth: 0
       - name: Get version
         id: version
         uses: paulhatch/semantic-version@v5.0.2
