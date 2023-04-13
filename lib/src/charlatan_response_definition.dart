@@ -16,19 +16,27 @@ typedef CharlatanRequestMatcher = bool Function(
 /// {@template charlatan_response_builder}
 /// A type representing a function to convert an http request into a response.
 ///
-/// The return value may be any json encodable object, a [CharlatanHttpResponse],
-/// or null.
-///
-/// Typically you will want to return a json response of Map<String, Object?>
-/// which will be automatically serialized and returned with a 200 status code.
-///
-/// If you want to customize the headers or the status code of the response, you
-/// can return an instance of [CharlatanHttpResponse].
+/// The return value is a [CharlatanHttpResponse].
 /// {@endtemplate}
-typedef CharlatanResponseBuilder = FutureOr<Object?> Function(
+typedef CharlatanResponseBuilder = FutureOr<CharlatanHttpResponse> Function(
   /// The request including path params, body, headers, options, etc
   CharlatanHttpRequest request,
 );
+
+/// {@template charlatan_response}
+/// A function to build a [CharlatanResponseBuilder]. The [statusCode] defaults
+/// to 200, the [body] defaults to null, and the [headers] defaults to empty.
+/// {@endtemplate}
+CharlatanResponseBuilder charlatanResponse({
+  int statusCode = 200,
+  Object? body,
+  Map<String, String> headers = const {},
+}) =>
+    (request) => CharlatanHttpResponse(
+          statusCode: statusCode,
+          body: body,
+          headers: headers,
+        );
 
 /// {@template charlatan_matches_all}
 /// A function to build a [CharlatanRequestMatcher] that matches if all of the
@@ -84,10 +92,6 @@ class CharlatanResponseDefinition {
   /// The callback that produces the response.
   final CharlatanResponseBuilder responseBuilder;
 
-  /// The default status code to use if the [responseBuilder] does not return
-  /// a [CharlatanHttpResponse].
-  final int defaultStatusCode;
-
   /// A description of the response definition, e.g. GET /users/123
   final String description;
 
@@ -95,7 +99,6 @@ class CharlatanResponseDefinition {
   CharlatanResponseDefinition({
     required this.requestMatcher,
     required this.responseBuilder,
-    required this.defaultStatusCode,
     required this.description,
   });
 
@@ -107,16 +110,11 @@ class CharlatanResponseDefinition {
   Future<CharlatanHttpResponse> buildResponse(
     CharlatanHttpRequest request,
   ) async {
-    final result = await responseBuilder(request);
-
-    if (result is CharlatanHttpResponse) {
-      return result;
+    final responseOrFuture = responseBuilder(request);
+    if (responseOrFuture is Future<CharlatanHttpResponse>) {
+      return await responseOrFuture;
     }
-
-    return CharlatanHttpResponse(
-      body: result,
-      statusCode: defaultStatusCode,
-    );
+    return responseOrFuture;
   }
 }
 
