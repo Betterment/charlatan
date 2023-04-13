@@ -110,7 +110,11 @@ class CharlatanResponseDefinition {
   Future<CharlatanHttpResponse> buildResponse(
     CharlatanHttpRequest request,
   ) async {
-    return responseBuilder(request);
+    final responseOrFuture = responseBuilder(request);
+    if (responseOrFuture is Future<CharlatanHttpResponse>) {
+      return await responseOrFuture;
+    }
+    return responseOrFuture;
   }
 }
 

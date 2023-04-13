@@ -10,7 +10,7 @@ responses from your [Dio HTTP Client](https://pub.dev/packages/dio).
 This makes it easy to test the behavior of code that interacts with
 HTTP services without having to use mocks.
 
-It consists of a two components and a few helper functions:
+It consists of two components and a few helper functions:
 
 - `Charlatan` - a class for configuring and providing fake HTTP responses
   based on HTTP method and URI template.
