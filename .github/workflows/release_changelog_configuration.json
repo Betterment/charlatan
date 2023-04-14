@@ -65,5 +65,5 @@
         }
     ],
     "template": "${{CHANGELOG}}",
-    "pr_template": "- ${{TITLE}} (${{MERGE_SHA}}) [${{AUTHOR}}]"
+    "pr_template": "\\- ${{TITLE}} (${{MERGE_SHA}}) [${{AUTHOR}}]"
 }
