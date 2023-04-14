@@ -41,9 +41,7 @@ jobs:
       - name: Update CHANGELOG and pubspec.yaml
         run: |
           cider version ${{ steps.version.outputs.version }}
-          sed -i '/^## \[Unreleased\]/i\
-          \n## [${{ steps.version.outputs.version }}] - $(date +%Y-%m-%d)\
-          \n\n${{ steps.release-notes.outputs.changelog }}' CHANGELOG.md
+          cat <(echo "##${{ steps.version.outputs.version }} \n\n$${{ steps.release-notes.outputs.changelog }}") temp.md > CHANGELOG.md
           git add CHANGELOG.md pubspec.yaml
           echo "CATTING"
           cat CHANGELOG.md
