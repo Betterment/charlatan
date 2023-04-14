@@ -53,7 +53,7 @@ jobs:
         with:
           token: ${{ steps.get_token.outputs.token }}
           branch: 'bot/prep-release-${{ steps.version.outputs.version }}'
-          title: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
+          title: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}` (NOBUMP)'
           commit-message: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
           add-paths: |
             CHANGELOG.md
