@@ -11,7 +11,11 @@ jobs:
     # if: ${{ github.event.pusher.username == 'btrautmann' }}
     steps:
       - name: echo
-        run: echo ${{ github.event.pusher.username }}
+        run: |
+          echo ${{ github.event.pusher.username }}
+          echo ${{ github.event.pusher.name }}
+          echo ${{ github.event.pusher.email }}
+          echo ${{ github.event.pusher.date }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get application token
