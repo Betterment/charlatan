@@ -11,6 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: main
           fetch-depth: 0
       - name: Get version
         id: version

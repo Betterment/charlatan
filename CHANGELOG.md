@@ -1,4 +1,4 @@
-## 0.4.0
+## 0.4.0 - 2023-04-14
 
 - Add `charlatanResponse` helper to concisely create `CharlatanResponseBuilder` values
 - Remove `statusCode` from `when*` methods
@@ -6,24 +6,24 @@
   from `FutureOr<Object?> Function(CharlatanHttpRequest request, { int statusCode = 200 })`
   to `FutureOr<CharlatanHttpResponse> Function(CharlatanHttpRequest request)`
 
-## 0.3.1
+## 0.3.1 - 2023-04-14
 
 - Export `CharlatanHttpRequest` and `CharlatanRequestMatcher`
 
-## 0.3.0
+## 0.3.0 - 2023-04-14
 
 - Add `whenMatch` for more complex matching scenarios
 - Remove `CharlatanHttpRequest#pathParameters`
 
-## 0.2.0
+## 0.2.0 - 2023-04-14
 
 - Upgrade `dio` to `5.0.0`
 
-## 0.1.0
+## 0.1.0 - 2023-04-14
 
 - Upgrade `dio` and `test`
 - Upgrade to dart 2.15.0
 
-## 0.0.1
+## 0.0.1 - 2023-04-14
 
 - Initial version.
