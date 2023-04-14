@@ -12,6 +12,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Get application token
+        id: get_token
+        uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
+        with:
+          application_id: ${{ secrets.CI_APP_ID }}
+          application_private_key: ${{ secrets.CI_APP_PRIVATE_KEY }}
       - name: Get version
         id: version
         uses: paulhatch/semantic-version@v5.0.2
@@ -45,6 +51,15 @@ jobs:
           cat <(echo -e "## ${{ steps.version.outputs.version }} - $(date +%Y-%m-%d) \n\n${{ steps.release-notes.outputs.changelog }}") CHANGELOG.md > NEW_CHANGELOG.md
           mv NEW_CHANGELOG.md CHANGELOG.md
           git add CHANGELOG.md pubspec.yaml
-          echo "CATTING"
-          cat CHANGELOG.md
-          cat pubspec.yaml
+      - name: Create pull request
+        id: create_pull_request
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
+        with:
+          token: ${{ steps.get_token.outputs.token }}
+          branch: 'bot/prep-release-${{ steps.version.outputs.version }}'
+          title: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
+          commit-message: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
+          add-paths: |
+            CHANGELOG.md
+            pubspec.yaml
+          base: main
