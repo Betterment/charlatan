@@ -11,7 +11,7 @@ jobs:
     if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
       - name: Get application token
         id: get_token
         uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
@@ -24,7 +24,7 @@ jobs:
         run: dart pub global activate cider
       - name: Get Latest Release
         id: latest-release
-        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        uses: pozetroninc/github-action-get-latest-release@d1dafdb6e338bdab109e6afce581a01858680dfb # v0.7.0
         with:
           owner: Betterment
           repo: charlatan

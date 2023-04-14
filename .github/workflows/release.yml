@@ -19,10 +19,10 @@ jobs:
           application_private_key: ${{ secrets.CI_APP_PRIVATE_KEY }}
       - name: Get version
         id: version
-        uses: paulhatch/semantic-version@v5.0.2
+        uses: paulhatch/semantic-version@ea50fff3e41d24bb283f22b7343c4b3a314282fb #v5.0.2
       - name: Get Latest Release
         id: latest-release
-        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        uses: pozetroninc/github-action-get-latest-release@d1dafdb6e338bdab109e6afce581a01858680dfb # v0.7.0
         with:
           owner: Betterment
           repo: charlatan
