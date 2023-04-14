@@ -45,7 +45,7 @@ jobs:
       - name: Update CHANGELOG and pubspec.yaml
         run: |
           cider version ${{ steps.version.outputs.version }}
-          cat <(echo -e "## ${{ steps.version.outputs.version }} - $(date +%Y-%m-%d) \n\n${{ steps.release-notes.outputs.changelog }}") CHANGELOG.md > NEW_CHANGELOG.md
+          cat <(echo -e "## ${{ steps.version.outputs.version }} - $(date +%Y-%m-%d) \n\n${{ steps.release-notes.outputs.changelog }}\n\n") CHANGELOG.md > NEW_CHANGELOG.md
           mv NEW_CHANGELOG.md CHANGELOG.md
           git add CHANGELOG.md pubspec.yaml
       - name: Create pull request
