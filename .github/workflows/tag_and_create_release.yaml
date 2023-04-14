@@ -33,8 +33,8 @@ jobs:
       - name: Check if should release
         id: should-release
         run: |
-          curr_version=$(cider version)
-          prev_version=${{ steps.latest-release.outputs.release }}
+          curr_version=v$(cider version)
+          prev_version=0.3.1
           echo "current version is $curr_version"
           echo "previous version is $prev_version"
           if [ "$curr_version" = "$prev_version" ]; then
@@ -42,18 +42,17 @@ jobs:
           else
             echo "should-release=true" >> $GITHUB_OUTPUT
             echo "curr-version=$curr_version" >> $GITHUB_OUTPUT
-            release_notes=$(cider describe $curr_version)
-            echo "release-notes=$release_notes" >> $GITHUB_OUTPUT
+            echo "release-notes=$release_notes" >> $GITHUB_ENV
           fi
     #   - name: Create tag
     #     if: ${{ steps.should-release.outputs.should-release }}
     #     run: |
-    #       git tag -fa v${{ steps.should-release.outputs.curr-version }} -m "release v${{ steps.should-release.outputs.curr-version }}"
+    #       git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
     #       git push -f --tags
     #   - name: Create release
     #     if: ${{ steps.should-release.outputs.should-release }}
     #     uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
     #     with:
-    #       tag: v${{ steps.should-release.outputs.curr-version }}
-    #       name: v${{ steps.should-release.outputs.curr-version }}
-    #       body: ${{ steps.should-release.outputs.release-notes }}
+    #       tag: ${{ steps.should-release.outputs.curr-version }}
+    #       name: ${{ steps.should-release.outputs.curr-version }}
+    #       body: ${{ env.release-notes }}
