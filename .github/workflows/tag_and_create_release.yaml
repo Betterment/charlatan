@@ -34,7 +34,7 @@ jobs:
         id: should-release
         run: |
           pubspec_version=$(cider version)
-          curr_version=v$pubsec_version
+          curr_version=v$pubspec_version
           prev_version=${{ steps.latest-release.outputs.release }}
           echo "current version is $curr_version"
           echo "previous version is $prev_version"
