@@ -2,7 +2,7 @@ name: Tag and Create Github Release
 
 on:
   push:
-    branches: [main, bt/automate-versioning]
+    branches: [main]
     paths: [CHANGELOG.md, pubspec.yaml]
 
 jobs:
