@@ -131,3 +131,10 @@ DELETE /users
 > own writes"
 
 Check out the example directory.
+
+### Contributing
+
+If you run into a bug or limitation when using Charlatan, we'd love your help in resolving it. First, it would be awesome if you could [open an issue](https://github.com/Betterment/charlatan/issues/new/choose) to discuss. If we feel like we should move forward with a change and you're willing to contribute, create a fork of `Charlatan` and open a PR against the main repo. Keep the following in mind when doing so:
+
+- Prior to opening the PR, be sure to run `dart format .` in the root of `Charlatan` which will format the code so it passes CI checks
+- When opening the PR, include one of `(MINOR)`, `(MAJOR)`, or `(NOBUMP)` at the _end_ of your PR title. Otherwise, it will fail CI. These tokens aid in the automation of our releases. Use `(MINOR)` to denote that your changes warrant a minor bump (they don't break the public API). Use `(MAJOR)` to denote that your changes warrant a major bump (they break the public API). Lastly, use `(NOBUMP)` to denote that your changes don't warrant a version bump (perhaps you fixed a docs typo).
