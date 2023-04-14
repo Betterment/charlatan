@@ -22,5 +22,8 @@ jobs:
             ci
             chore
           validateSingleCommit: true
+          subjectPattern: .*\(MINOR\)$|.*\(MAJOR\)$|.*\(NOBUMP\)$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}" didn't match the configured pattern. Please ensure that the subject ends with one of `(MINOR)`, `(MAJOR)`, or `(NOBUMP)`. This supports our automated versioning and release pipelines.
         env:
           GITHUB_TOKEN: ${{ github.token }}
