@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }}
+    # if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,16 +33,16 @@ jobs:
       - name: Check if should release
         id: should-release
         run: |
-          curr_version=$(cider version)
-          output_version=v$curr_version
-          prev_version=0.3.1
+          pubspec_version=$(cider version)
+          curr_version=v$curr_version
+          prev_version=${{ steps.latest-release.outputs.release }}
           echo "current version is $curr_version"
           echo "previous version is $prev_version"
           if [ "$curr_version" = "$prev_version" ]; then
             echo "should-release=false" >> $GITHUB_OUTPUT
           else
             echo "should-release=true" >> $GITHUB_OUTPUT
-            echo "curr-version=$output_version" >> $GITHUB_OUTPUT
+            echo "curr-version=$curr_version" >> $GITHUB_OUTPUT
           fi
     #   - name: Create tag
     #     if: ${{ steps.should-release.outputs.should-release }}
