@@ -16,8 +16,6 @@ jobs:
       - name: Get version
         id: version
         uses: paulhatch/semantic-version@v5.0.2
-        with:
-          branch: bt/automate-versioning
       - name: Get Latest Release
         id: latest-release
         uses: pozetroninc/github-action-get-latest-release@v0.7.0
@@ -29,8 +27,24 @@ jobs:
         id: release-notes
         uses: mikepenz/release-changelog-builder-action@3a70419f3cc01ac7458a4fa44f09726475edfc6a # v3.4.0
         with:
-          fromTag: ${{ steps.latest-release.outputs.release }}
-          # toTag: v0.4.0 # Needs to be HEAD
+          # fromTag: ${{ steps.latest-release.outputs.release }}
+          fromTag: v0.3.1
+          toTag: v0.4.0 # Needs to be HEAD
           configuration: .github/workflows/release_changelog_configuration.json
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      - name: Setup dart and cider
+        uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f # v1.5.0
+      - name: Install dependencies
+        run: |
+          dart pub get
+          dart pub global activate cider
+      - name: Update CHANGELOG and pubspec.yaml
+        run: |
+          cider version ${{ steps.version.outputs.version }}
+          sed -i '/^## \[Unreleased\]/i\
+          \n## [${{ steps.version.outputs.version }}] - $(date +%Y-%m-%d)\
+          \n\n${{ steps.release-notes.outputs.changelog }}' CHANGELOG.md
+          git add CHANGELOG.md pubspec.yaml
+          cat CHANGELOG.md
+          cat pubspec.yaml
