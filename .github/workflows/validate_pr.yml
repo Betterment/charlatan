@@ -1,6 +1,9 @@
 name: Semantic PR
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
 
 permissions:
   pull-requests: read
