@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get application token
+        id: get_token
+        uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
+        with:
+          application_id: ${{ secrets.CI_APP_ID }}
+          application_private_key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Get version
+        id: version
+        uses: paulhatch/semantic-version@v5.0.2
+      - name: Get Latest Release
+        id: latest-release
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        with:
+          owner: Betterment
+          repo: charlatan
+          excludes: prerelease, draft
+          token: ${{ github.token }}
+      - name: Generate release notes
+        id: release-notes
+        uses: mikepenz/release-changelog-builder-action@3a70419f3cc01ac7458a4fa44f09726475edfc6a # v3.4.0
+        with:
+          # fromTag: ${{ steps.latest-release.outputs.release }}
+          fromTag: v0.3.1
+          toTag: v0.4.0 # Needs to be HEAD
+          configuration: .github/workflows/release_changelog_configuration.json
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Setup dart
+        uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f # v1.5.0
+      - name: Setup cider
+        run: dart pub global activate cider
+      - name: Update CHANGELOG and pubspec.yaml
+        run: |
+          cider version ${{ steps.version.outputs.version }}
+          cat <(echo -e "## ${{ steps.version.outputs.version }} - $(date +%Y-%m-%d) \n\n${{ steps.release-notes.outputs.changelog }}") CHANGELOG.md > NEW_CHANGELOG.md
+          mv NEW_CHANGELOG.md CHANGELOG.md
+          git add CHANGELOG.md pubspec.yaml
+      - name: Create pull request
+        id: create_pull_request
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
+        with:
+          token: ${{ steps.get_token.outputs.token }}
+          branch: 'bot/prep-release-${{ steps.version.outputs.version }}'
+          title: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
+          commit-message: 'chore(release): update CHANGELOG and pubspec.yaml for version `${{ steps.version.outputs.version }}`'
+          add-paths: |
+            CHANGELOG.md
+            pubspec.yaml
+          base: main
