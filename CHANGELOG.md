@@ -1,4 +1,11 @@
-## 0.4.0
+## 0.4.1 - 2023-04-14 
+
+## 🚀 Features
+
+- feat: add charlatanResponse helper, add type-safety (671566f6f22ac75597feb5f691946e162d9dc070) [samandmoore]
+
+
+## 0.4.0 - 2023-04-14
 
 - Add `charlatanResponse` helper to concisely create `CharlatanResponseBuilder` values
 - Remove `statusCode` from `when*` methods
