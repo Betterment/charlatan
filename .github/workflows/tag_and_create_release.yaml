@@ -6,7 +6,7 @@ on:
     paths: [CHANGELOG.md, pubspec.yaml]
 
 jobs:
-  build:
+  tag_and_create_draft_release:
     runs-on: ubuntu-latest
     if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }}
     steps:

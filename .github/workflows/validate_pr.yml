@@ -6,7 +6,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR title
