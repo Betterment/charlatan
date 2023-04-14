@@ -8,8 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pusher.username == 'btrautmann' }}
+    # if: ${{ github.event.pusher.username == 'btrautmann' }}
     steps:
+      - name: echo
+        run: echo ${{ github.event.pusher.username }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get application token
