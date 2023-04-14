@@ -60,3 +60,7 @@ jobs:
             CHANGELOG.md
             pubspec.yaml
           base: main
+      - name: Merge pull request
+        run: gh pr merge ${{ steps.create_pull_request.outputs.pull-request-number }} --squash --auto --delete-branch
+        env:
+          GITHUB_TOKEN: ${{ steps.get_token.outputs.token }}
