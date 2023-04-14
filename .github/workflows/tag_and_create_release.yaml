@@ -42,7 +42,8 @@ jobs:
           else
             echo "should-release=true" >> $GITHUB_OUTPUT
             echo "curr-version=$curr_version" >> $GITHUB_OUTPUT
-            echo "release-notes=$release_notes" >> $GITHUB_ENV
+            release_notes=$(cider describe $curr_version)
+            echo "release-notes=$release_notes" >> $GITHUB_OUTPUT
           fi
     #   - name: Create tag
     #     if: ${{ steps.should-release.outputs.should-release }}
