@@ -6,7 +6,7 @@
   from `FutureOr<Object?> Function(CharlatanHttpRequest request, { int statusCode = 200 })`
   to `FutureOr<CharlatanHttpResponse> Function(CharlatanHttpRequest request)`
 
-## 0.3.1 - 2023-04-10
+## 0.3.1 - 2023-04-09
 
 - Export `CharlatanHttpRequest` and `CharlatanRequestMatcher`
 

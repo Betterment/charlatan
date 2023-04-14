@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # if: $(${{ github.event.pusher.username == 'betterment-mobile-cicd[bot]' }})
+    if: $(${{ github.event.pusher.username == 'btrautmann' }})
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,8 +43,6 @@ jobs:
           else
             echo "should-release=true" >> $GITHUB_OUTPUT
             echo "curr-version=$output_version" >> $GITHUB_OUTPUT
-            release_notes=$(cider describe $curr_version)
-            echo "release-notes=$release_notes" >> $GITHUB_OUTPUT
           fi
     #   - name: Create tag
     #     if: ${{ steps.should-release.outputs.should-release }}
@@ -57,4 +55,5 @@ jobs:
     #     with:
     #       tag: ${{ steps.should-release.outputs.curr-version }}
     #       name: ${{ steps.should-release.outputs.curr-version }}
-    #       body: ${{ env.release-notes }}
+    #       token: ${{ steps.get_token.output.token }}
+    #       generateReleaseNotes: true
