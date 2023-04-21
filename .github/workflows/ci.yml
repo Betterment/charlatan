@@ -12,40 +12,35 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3.3.0
-      - uses: dart-lang/setup-dart@v1.4
-
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+      - name: Setup dart
+        uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f # v1.5.0
       - name: Install dependencies
         run: dart pub get
-
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
-
       - name: Analyze project source
-        uses: invertase/github-action-dart-analyzer@v1
-
+        uses: invertase/github-action-dart-analyzer@1cda5922c6369263b1c7e2fbe281f69704f4d63e #v1.0.0
       - name: Run tests and generate coverage report
         run: ./tool/generate_code_coverage.sh
-
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865 #v3.1.2
         with:
           files: coverage/lcov.info
   
   pana:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3.3.0
-      - uses: dart-lang/setup-dart@v1.4
-
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+      - name: Setup dart
+        uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f # v1.5.0
       - name: Install dependencies
         run: |
           dart pub get
           dart pub global activate pana
-      
       - name: Verify pub score
         run: ./tool/verify_pub_score.sh

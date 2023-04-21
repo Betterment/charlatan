@@ -1,0 +1,10 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  publish:
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@d6a63dab3335f427404425de0fbfed4686d93c4f #v1.5.0
