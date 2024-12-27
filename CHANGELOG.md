@@ -1,7 +1,3 @@
-## 0.4.1 - 2025-01-01
-
-- Export `CharlatanResponseBuilder`
-
 ## 0.4.0 - 2023-04-13
 
 - Add `charlatanResponse` helper to concisely create `CharlatanResponseBuilder` values
