@@ -60,7 +60,6 @@ ${charlatan.toPrettyPrintedString()}
     throw UnimplementedError(errorMessage);
   }
 
-  /// {@nodoc}
   @override
   void close({bool force = false}) {}
 }

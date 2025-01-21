@@ -9,6 +9,7 @@ export 'src/charlatan_response_definition.dart'
     show
         CharlatanHttpRequest,
         CharlatanHttpResponse,
+        CharlatanResponseBuilder,
         CharlatanRequestMatcher,
         charlatanResponse,
         requestMatchesAll,

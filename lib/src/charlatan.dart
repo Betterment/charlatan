@@ -12,10 +12,10 @@ import 'package:collection/collection.dart';
 /// ```
 /// {@endtemplate}
 class Charlatan {
-  /// {@nodoc}
+  // ignore: public_member_api_docs
   bool shouldLogErrors = true;
 
-  /// {@nodoc}
+  // ignore: public_member_api_docs
   void silenceErrors() => shouldLogErrors = false;
 
   final List<CharlatanResponseDefinition> _matchers = [];
