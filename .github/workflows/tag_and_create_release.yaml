@@ -47,6 +47,8 @@ jobs:
       - name: Create tag
         if: ${{ steps.should-release.outputs.should-release }}
         run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
           git push -f --tags
       - name: Create release
