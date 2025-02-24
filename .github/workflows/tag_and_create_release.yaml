@@ -4,11 +4,12 @@ on:
   push:
     branches: [main]
     paths: [CHANGELOG.md, pubspec.yaml]
+  workflow_dispatch:
 
 jobs:
   tag_and_create_draft_release:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }}
+    if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }} || ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Checkout
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
@@ -47,6 +48,8 @@ jobs:
       - name: Create tag
         if: ${{ steps.should-release.outputs.should-release }}
         run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
           git push -f --tags
       - name: Create release
