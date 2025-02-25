@@ -11,14 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.pusher.name == 'betterment-mobile-cicd[bot]' }} || ${{ github.event_name == 'workflow_dispatch' }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
       - name: Get application token
         id: get_token
         uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
         with:
           application_id: ${{ secrets.CI_APP_ID }}
           application_private_key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+        with:
+          token: ${{ steps.get_token.outputs.token }}
       - name: Setup dart
         uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f # v1.5.0
       - name: Setup cider
@@ -52,6 +54,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
           git push -f --tags
+
       - name: Create release
         if: ${{ steps.should-release.outputs.should-release }}
         uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
