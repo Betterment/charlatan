@@ -54,12 +54,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
           git push -f --tags
-
       - name: Create release
         if: ${{ steps.should-release.outputs.should-release }}
         uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
         with:
           tag: ${{ steps.should-release.outputs.curr-version }}
           name: ${{ steps.should-release.outputs.curr-version }}
-          token: ${{ steps.get_token.output.token }}
+          token: ${{ steps.get_token.outputs.token }}
           generateReleaseNotes: true
