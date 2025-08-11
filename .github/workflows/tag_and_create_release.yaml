@@ -48,10 +48,10 @@ jobs:
           echo "current version is $curr_version"
           echo "previous version is $prev_version"
           if [ "$curr_version" = "$prev_version" ]; then
-            echo "should-release=false" >> $GITHUB_OUTPUT
+            echo "should-release=false" >> "$GITHUB_OUTPUT"
           else
-            echo "should-release=true" >> $GITHUB_OUTPUT
-            echo "curr-version=$curr_version" >> $GITHUB_OUTPUT
+            echo "should-release=true" >> "$GITHUB_OUTPUT"
+            echo "curr-version=$curr_version" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create tag
@@ -59,7 +59,7 @@ jobs:
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git tag -fa ${{ steps.should-release.outputs.curr-version }} -m "release ${{ steps.should-release.outputs.curr-version }}"
+          git tag -fa "${{ steps.should-release.outputs.curr-version }}" -m "release ${{ steps.should-release.outputs.curr-version }}"
           git push -f --tags
 
       - name: Create release
