@@ -15,10 +15,11 @@ jobs:
 
       - name: Get application token
         id: get_token
-        uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
         with:
-          application_id: ${{ secrets.CI_APP_ID }}
-          application_private_key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.CI_APP_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
 
       - name: Get version
         id: version
