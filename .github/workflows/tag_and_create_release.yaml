@@ -1,5 +1,6 @@
 name: Tag and Create Github Release
 
+# ignore: RiskyTriggers
 on:
   push:
     branches: [main]
