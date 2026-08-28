@@ -1,5 +1,7 @@
 # charlatan
 
+testing the new policy-bot setup
+
 [![pub package](https://img.shields.io/pub/v/charlatan.svg)](https://pub.dev/packages/charlatan)
 [![Build status](https://github.com/Betterment/charlatan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Betterment/charlatan/actions/workflows/ci.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
